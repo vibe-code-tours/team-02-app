@@ -50,6 +50,7 @@ jobs:
     name: sast (semgrep)
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: ${{ hashFiles('requirements.txt', 'pyproject.toml', '**/requirements.txt', '**/pyproject.toml') != '' }}
     continue-on-error: true          # ch-8: remove to enforce
     steps:
       - uses: actions/checkout@v4
