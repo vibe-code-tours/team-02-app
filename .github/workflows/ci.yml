@@ -32,7 +32,7 @@ jobs:
         if: ${{ hashFiles('package.json') != '' }}
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
       - name: Install (Node)
         if: ${{ hashFiles('package.json') != '' }}
@@ -53,21 +53,5 @@ jobs:
         run: npm run build --if-present
 
       # ---------- Python (runs only if requirements/pyproject exists) ----------
-      - name: Setup Python
-        if: ${{ hashFiles('requirements.txt', 'pyproject.toml') != '' }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - name: Install (Python)
-        if: ${{ hashFiles('requirements.txt', 'pyproject.toml') != '' }}
-        run: |
-          python -m pip install --upgrade pip
-          [ -f requirements.txt ] && pip install -r requirements.txt || true
-          pip install ruff pytest
-      - name: Lint (ruff)
-        if: ${{ hashFiles('requirements.txt', 'pyproject.toml') != '' }}
-        run: ruff check . || true    # ch-8: drop `|| true` to enforce
-      - name: Test (pytest)
-        if: ${{ hashFiles('requirements.txt', 'pyproject.toml') != '' }}
-        run: pytest -q || true       # ch-8: drop `|| true` to enforce
+      # Note: Python steps removed as this is a pure Node.js project
+      # To re-enable, uncomment and ensure requirements.txt or pyproject.toml exists
