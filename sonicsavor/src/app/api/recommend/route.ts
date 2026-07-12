@@ -27,10 +27,11 @@ export async function POST(request: Request) {
     const recommendation = await generateMealRecommendation(mood, candidates);
 
     return NextResponse.json(recommendation);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API recommend] Handler error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { error: error?.message || "Internal server error" },
+      { error: message },
       { status: 500 }
     );
   }

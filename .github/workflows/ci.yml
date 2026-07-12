@@ -29,51 +29,29 @@ jobs:
 
       # ---------- Node / TypeScript (runs only if package.json exists) ----------
       - name: Setup Node
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
+        if: ${{ hashFiles('package.json') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: "sonicsavor/package-lock.json"
       - name: Install (Node)
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
-        working-directory: ./sonicsavor
+        if: ${{ hashFiles('package.json') != '' }}
         # npm ci is reproducible but needs a lockfile; fall back to npm install so a
         # first-push repo without package-lock.json still goes green.
         run: npm ci || npm install
       - name: Lint
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
-        working-directory: ./sonicsavor
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm run lint --if-present
       - name: Typecheck
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
-        working-directory: ./sonicsavor
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm run typecheck --if-present
       - name: Test
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
-        working-directory: ./sonicsavor
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm test --if-present
       - name: Build
-        if: ${{ hashFiles('sonicsavor/package.json') != '' }}
-        working-directory: ./sonicsavor
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm run build --if-present
 
       # ---------- Python (runs only if requirements/pyproject exists) ----------
-      - name: Setup Python
-        if: ${{ hashFiles('**/requirements.txt') != '' || hashFiles('**/pyproject.toml') != '' }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - name: Install (Python)
-        if: ${{ hashFiles('**/requirements.txt') != '' || hashFiles('**/pyproject.toml') != '' }}
-        run: |
-          python -m pip install --upgrade pip
-          [ -f requirements.txt ] && pip install -r requirements.txt || true
-          pip install ruff pytest
-      - name: Lint (ruff)
-        if: ${{ hashFiles('**/requirements.txt') != '' || hashFiles('**/pyproject.toml') != '' }}
-        run: ruff check . || true    # ch-8: drop `|| true` to enforce
-      - name: Test (pytest)
-        if: ${{ hashFiles('**/requirements.txt') != '' || hashFiles('**/pyproject.toml') != '' }}
-        run: pytest -q || true       # ch-8: drop `|| true` to enforce
+      # Note: Python steps removed as this is a pure Node.js project
+      # To re-enable, uncomment and ensure requirements.txt or pyproject.toml exists

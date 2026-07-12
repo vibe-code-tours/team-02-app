@@ -57,8 +57,8 @@ export async function searchByMood(query: string, limit: number = 3): Promise<Me
     .filter(item => item.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  const results = sorted.length > 0 
-    ? sorted.map(({ score, ...item }) => item) 
+  const results = sorted.length > 0
+    ? sorted.map(({ score: _score, ...item }) => item)
     : MENU_ITEMS.slice(0, limit); // fallback to first few items if no matches
 
   return results.slice(0, limit);

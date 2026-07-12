@@ -22,10 +22,11 @@ export async function GET(request: Request) {
     const embedUrl = await searchSpotifyPlaylist(query);
 
     return NextResponse.json({ url: embedUrl });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API spotify] Handler error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { error: error?.message || "Internal server error" },
+      { error: message },
       { status: 500 }
     );
   }
