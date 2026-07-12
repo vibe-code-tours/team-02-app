@@ -16,27 +16,36 @@ SonicSavor is a mood-driven dining web app that turns a user's emotional state i
 sonicsavor/
 ├── src/
 │   ├── app/
+│   │   ├── api/
+│   │   │   ├── recommend/
+│   │   │   │   └── route.ts        # POST endpoint for recommendations
+│   │   │   └── spotify/
+│   │   │       └── route.ts        # GET endpoint for Spotify search
 │   │   ├── layout.tsx              # Root layout (already exists)
 │   │   ├── page.tsx                # Home page — mood input + results
 │   │   └── globals.css             # Tailwind base (already exists)
 │   ├── components/
-│   │   ├── MoodInput.tsx           # Free-text textarea + submit
-│   │   ├── MoodChips.tsx           # Preset mood chip row
-│   │   ├── RecommendationCard.tsx  # Single course card (starter/main/dessert)
-│   │   ├── RecommendationGrid.tsx  # 3-course grid wrapper
-│   │   ├── SpotifyEmbed.tsx        # Spotify iframe embed player
-│   │   └── LoadingState.tsx        # Skeleton / thinking animation
+│   │   ├── feedback/
+│   │   │   └── CustomerFeedbackForm.tsx # Customer feedback form preview
+│   │   ├── guest/
+│   │   │   └── GuestRegistrationForm.tsx # Guest registration form preview
+│   │   └── ui/
+│   │       ├── LoadingState.tsx        # Skeleton / thinking animation
+│   │       ├── MoodChips.tsx           # Preset mood chip row
+│   │       ├── MoodInput.tsx           # Free-text textarea + submit
+│   │       ├── RecommendationGrid.tsx  # 3-course grid wrapper
+│   │       ├── SpotifyEmbed.tsx        # Spotify iframe embed player
+│   │       └── StarRating.tsx          # Star rating component for feedback
 │   ├── lib/
-│   │   ├── menu-data.ts            # Static menu dataset (typed array)
-│   │   ├── embeddings.ts           # Transformers.js embed + in-memory vector search
-│   │   ├── openai.ts               # OpenAI client + recommendation call
-│   │   └── spotify.ts              # Spotify Client Credentials + playlist search
+│   │   ├── menu-data.ts            # Static menu dataset (18 items)
+│   │   ├── embeddings.ts           # Semantic vector search & mock tag-matching
+│   │   ├── openai.ts               # OpenAI GPT-4o-mini request handler stub
+│   │   └── spotify.ts              # Spotify Client Credentials search stub
 │   └── types/
-│       └── index.ts                # MenuItem, Recommendation, SpotifyPlaylist, etc.
+│       └── index.ts                # MenuItem, Recommendation, GuestRegistration, etc.
 ├── scripts/
 │   └── test-search.ts              # CLI test: embed + search menu by mood string
 ├── .env.local                      # Secrets (gitignored)
-├── PLAN.md                         # This file
 ├── package.json
 ├── tsconfig.json
 ├── next.config.ts
@@ -45,6 +54,7 @@ sonicsavor/
 ```
 
 **Key decisions:**
+- **Layered Service Architecture**: The app follows a separation of concerns layout. Next.js API routes act as controllers, while code in `src/lib/` behaves as services. This isolates business logic for easier unit/CLI testing.
 - `src/app/page.tsx` is a single-page app — mood input at top, results below, no routing needed for MVP.
 - `src/lib/` holds all server-side logic (embeddings, OpenAI, Spotify). These run in API routes or server components only.
 - `src/types/index.ts` is the single source of truth for all shared interfaces.
@@ -174,10 +184,10 @@ export interface Recommendation {
 | # | Milestone | What's Testable | Depends On | Status |
 |---|---|---|---|---|
 | **M0** | Project setup | `npm run dev` serves, env vars load | — | ✅ |
-| **M1** | Menu data + embeddings + search | `scripts/test-search.ts "I feel exhausted"` → returns top 3 | M0 | ⬜ |
+| **M1** | Menu data + embeddings + search | `scripts/test-search.ts "I feel exhausted"` → returns top 3 | M0 | ⚠️ *Skeleton & dataset ready* |
 | **M2** | Mood input UI | Type a mood or click a chip → raw text captured in state | M0 | ⬜ |
-| **M3** | AI recommendation endpoint | `POST /api/recommend` → structured `Recommendation` JSON | M1, M2 | ⬜ |
-| **M4** | Spotify integration | `GET /api/spotify?q=chill+acoustic` → playlist embed URL | M0 | ⬜ |
+| **M3** | AI recommendation endpoint | `POST /api/recommend` → structured `Recommendation` JSON | M1, M2 | ⚠️ *Skeleton & API route ready* |
+| **M4** | Spotify integration | `GET /api/spotify?q=chill+acoustic` → playlist embed URL | M0 | ⚠️ *Skeleton & API route ready* |
 | **M5** | Wire it together | Full flow: mood → recommendation → Spotify embed → UI | M2, M3, M4 | ⬜ |
 | **M6** | Polish + deploy | Loading states, errors, responsive, Vercel deploy | M5 | ⬜ |
 

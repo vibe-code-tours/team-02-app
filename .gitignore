@@ -1,17 +1,37 @@
 # Secrets
 .env
 .env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example
 
-# Node
+# Node / Package managers
 node_modules/
 npm-debug.log*
+yarn-debug.log*
 yarn-error.log*
 .pnpm-store/
+.pnpm-debug.log*
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Build / Output outputs
 dist/
 build/
 .next/
 .turbo/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
 coverage/
 
 # Python
@@ -24,9 +44,19 @@ venv/
 .ruff_cache/
 *.egg-info/
 
-# OS / editor
+# OS / editor / IDE
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Certificates / Keys
+*.pem
+
+# Vercel
+.vercel
+
+# Local AI agent Configurations (Personal Developer Rules)
+.claude.local.md
+.claudes/local-resources/

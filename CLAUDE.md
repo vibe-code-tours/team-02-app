@@ -49,7 +49,7 @@ A `.env.example` is committed as a template.
 - Transformers.js runs the embedding model entirely in Node — no GPU, no external API. First load is ~30MB (cached after).
 - The menu dataset is a typed TypeScript array, not a JSON file. Search operates on `moodDescription` fields (longer mood-focused text), not just dish names.
 - The AI output schema uses OpenAI's structured output mode (function calling with JSON schema), not freeform parsing. The `Recommendation` type is the contract between API and UI.
-- Milestones are tracked in `PLAN.md` with status markers (⬜/✅).
+- Milestones are tracked in `docs/PLAN.md` with status markers (⬜/✅).
 
 # Local AI Agent Configurations (Personal Developer Rules)
 .claude.local.md
