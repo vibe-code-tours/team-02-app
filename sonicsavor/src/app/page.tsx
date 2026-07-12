@@ -8,63 +8,50 @@ import RecommendationGrid from "@/components/ui/RecommendationGrid";
 import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
 import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
 import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
-import type { Recommendation, GuestRegistration, CourseRecommendation } from "@/types";
-
-// ── Mock data ──────────────────────────────────────────────
-
-const MOCK_COURSES: CourseRecommendation[] = [
-  {
-    course: "starter",
-    dishName: "Mohinga",
-    cuisine: "Myanmar",
-    moodTags: ["comforting", "nostalgic", "warming"],
-    description:
-      "The warm, aromatic fish broth is the ultimate comfort — like a gentle embrace for your tired soul.",
-    icon: "🍜",
-  },
-  {
-    course: "main",
-    dishName: "Mushroom Risotto",
-    cuisine: "Western",
-    moodTags: ["comforting", "elegant", "calming"],
-    description:
-      "Creamy, earthy, and meditative. The slow rhythm of risotto mirrors the slowing down you need right now.",
-    icon: "🍄",
-  },
-  {
-    course: "dessert",
-    dishName: "Apple Crumble",
-    cuisine: "Western",
-    moodTags: ["nostalgic", "warm", "homey"],
-    description:
-      "Warm cinnamon apples and crunchy crumble — like a blanket and a fireplace in dessert form.",
-    icon: "🍎",
-  },
-];
-
-const MOCK_SPOTIFY_URL =
-  "https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U?utm_source=generator";
+import type { Recommendation, GuestRegistration } from "@/types";
 
 // ── Page ───────────────────────────────────────────────────
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>({
-    courses: MOCK_COURSES,
-    playlistQuery: "acoustic chill cozy evening playlist",
-  });
-  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(MOCK_SPOTIFY_URL);
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
+  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Mock submit — just toggles loading briefly then shows mock data
   const handleMoodSubmit = async (mood: string) => {
     setIsLoading(true);
     setErrorMsg(null);
-    // Simulate a short load
-    await new Promise((r) => setTimeout(r, 1500));
-    setRecommendation({ courses: MOCK_COURSES, playlistQuery: mood });
-    setSpotifyUrl(MOCK_SPOTIFY_URL);
-    setIsLoading(false);
+    setRecommendation(null);
+    setSpotifyUrl(null);
+
+    try {
+      // 1. Get meal recommendation from OpenAI
+      const recRes = await fetch("/api/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mood }),
+      });
+
+      if (!recRes.ok) {
+        const err = await recRes.json();
+        throw new Error(err.error || "Failed to get recommendation");
+      }
+
+      const rec: Recommendation = await recRes.json();
+      setRecommendation(rec);
+
+      // 2. Get Spotify playlist embed URL
+      const spotRes = await fetch(`/api/spotify?q=${encodeURIComponent(rec.playlistQuery)}`);
+      if (spotRes.ok) {
+        const spotData = await spotRes.json();
+        setSpotifyUrl(spotData.url);
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGuestSubmit = (data: GuestRegistration) => {
