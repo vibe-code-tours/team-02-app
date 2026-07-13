@@ -30,7 +30,7 @@ export default function RecommendationGrid({
 
   return (
     <section className="w-full max-w-3xl mx-auto" aria-label="Recommended 3-course meal">
-      <h2 className="text-center text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-5">
+      <h2 className="text-center text-sm font-semibold uppercase tracking-wider text-text-secondary mb-5 font-mono">
         Your 3-Course Meal
       </h2>
 

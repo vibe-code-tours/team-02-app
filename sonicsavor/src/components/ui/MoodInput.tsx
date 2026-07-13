@@ -36,14 +36,12 @@ export default function MoodInput({ onSubmit, disabled = false }: MoodInputProps
       <div
         className={`
           group relative flex items-end gap-2
-          rounded-2xl border border-zinc-200 bg-white
+          rounded-2xl border border-surface-elevated bg-surface
           px-4 py-3
           shadow-sm
           transition-all duration-200 ease-in-out
-          focus-within:border-stone-400 focus-within:shadow-md
-          focus-within:ring-2 focus-within:ring-stone-200
-          dark:border-zinc-700 dark:bg-zinc-900
-          dark:focus-within:border-stone-500 dark:focus-within:ring-stone-800
+          focus-within:border-primary focus-within:shadow-md
+          focus-within:ring-2 focus-within:ring-primary/30
           ${disabled ? "opacity-50 pointer-events-none" : ""}
         `}
       >
@@ -59,8 +57,8 @@ export default function MoodInput({ onSubmit, disabled = false }: MoodInputProps
             transition-all duration-200 ease-in-out
             ${
               mood.trim()
-                ? "bg-stone-800 text-white hover:bg-stone-700 active:scale-95 cursor-pointer dark:hover:bg-stone-600"
-                : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"
+                ? "bg-primary text-white hover:bg-primary/90 active:scale-95 cursor-pointer"
+                : "bg-surface-elevated text-text-secondary"
             }
             disabled:cursor-not-allowed disabled:opacity-40
           `}
@@ -91,12 +89,10 @@ export default function MoodInput({ onSubmit, disabled = false }: MoodInputProps
           disabled={disabled}
           className={`
             flex-1 resize-none bg-transparent
-            text-base text-zinc-900 placeholder:text-zinc-400
+            text-base text-text-primary placeholder:text-text-secondary
             focus:outline-none
-            dark:text-zinc-100 dark:placeholder:text-zinc-500
             min-h-7 max-h-[120px]
             leading-relaxed
-            font-[family-name:var(--font-geist-sans)]
           `}
           style={{
             height: "auto",
@@ -114,9 +110,9 @@ export default function MoodInput({ onSubmit, disabled = false }: MoodInputProps
       {/* Hint text */}
       <p
         id="mood-hint"
-        className="mt-1.5 text-xs text-zinc-400 text-center dark:text-zinc-500"
+        className="mt-1.5 text-xs text-text-secondary text-center"
       >
-        Press <kbd className="px-1 py-0.5 rounded bg-zinc-100 text-zinc-500 text-[10px] font-mono dark:bg-zinc-800 dark:text-zinc-400">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-zinc-100 text-zinc-500 text-[10px] font-mono dark:bg-zinc-800 dark:text-zinc-400">Shift+Enter</kbd> for a new line
+        Press <kbd className="px-1 py-0.5 rounded bg-surface-elevated text-text-secondary text-[10px] font-mono">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-surface-elevated text-text-secondary text-[10px] font-mono">Shift+Enter</kbd> for a new line
       </p>
     </div>
   );

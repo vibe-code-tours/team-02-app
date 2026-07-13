@@ -12,10 +12,10 @@ const FLOATING_ICONS = [
 function SkeletonBone({ className }: { className?: string }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 ${className ?? ""}`}
+      className={`relative overflow-hidden rounded-xl bg-surface ${className ?? ""}`}
     >
       {/* Shimmer overlay */}
-      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent" />
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
     </div>
   );
 }
@@ -36,7 +36,7 @@ function CourseCardSkeleton({ label, width }: { label: string; width: string }) 
       <SkeletonBone className="h-3.5 w-1/2" />
 
       {/* Label */}
-      <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 tracking-wide uppercase">
+      <span className="text-xs font-medium text-text-secondary tracking-wide uppercase font-mono">
         {label}
       </span>
     </div>
@@ -66,11 +66,11 @@ export default function LoadingState() {
       {/* Status text */}
       <div className="flex items-center justify-center gap-2 mb-8">
         <div className="flex gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-stone-500 animate-[dotPulse_1.4s_ease-in-out_infinite]" />
-          <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-stone-500 animate-[dotPulse_1.4s_ease-in-out_200ms_infinite]" />
-          <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-stone-500 animate-[dotPulse_1.4s_ease-in-out_400ms_infinite]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-[dotPulse_1.4s_ease-in-out_infinite]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-[dotPulse_1.4s_ease-in-out_200ms_infinite]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-[dotPulse_1.4s_ease-in-out_400ms_infinite]" />
         </div>
-        <span className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+        <span className="text-sm text-text-secondary font-medium">
           Crafting your perfect meal & playlist…
         </span>
       </div>

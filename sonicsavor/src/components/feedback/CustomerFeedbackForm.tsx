@@ -24,12 +24,12 @@ function ToggleButton({
 }) {
   const colors = {
     yes: {
-      active: "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-700",
-      inactive: "bg-zinc-50 text-zinc-500 border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 dark:hover:bg-zinc-700",
+      active: "bg-success/20 text-success border-success",
+      inactive: "bg-surface text-text-secondary border-surface-elevated hover:bg-surface-elevated",
     },
     no: {
-      active: "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-700",
-      inactive: "bg-zinc-50 text-zinc-500 border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 dark:hover:bg-zinc-700",
+      active: "bg-error/20 text-error border-error",
+      inactive: "bg-surface text-text-secondary border-surface-elevated hover:bg-surface-elevated",
     },
   };
 
@@ -44,7 +44,7 @@ function ToggleButton({
         transition-all duration-200 ease-in-out
         hover:-translate-y-0.5 hover:shadow-sm
         active:scale-95
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-1
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
         disabled:opacity-50 disabled:pointer-events-none
         ${selected ? colors[variant].active : colors[variant].inactive}
       `}
@@ -86,14 +86,14 @@ export default function CustomerFeedbackForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-2xl mx-auto rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      className="w-full max-w-2xl mx-auto rounded-2xl border border-surface-elevated bg-surface p-6 sm:p-8 shadow-sm"
     >
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-text-primary font-display">
           Share Your Experience
         </h2>
-        <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1.5 text-sm text-text-secondary">
           Your feedback helps us perfect the mood-to-meal experience.
         </p>
       </div>
@@ -132,9 +132,9 @@ export default function CustomerFeedbackForm({
 
         {/* ── Comments ───────────────────────────────────── */}
         <fieldset>
-          <legend className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
+          <legend className="text-sm font-semibold text-text-primary mb-3">
             Comments
-            <span className="ml-1.5 font-normal text-zinc-400 dark:text-zinc-500">(optional)</span>
+            <span className="ml-1.5 font-normal text-text-secondary">(optional)</span>
           </legend>
           <textarea
             rows={3}
@@ -143,13 +143,10 @@ export default function CustomerFeedbackForm({
             placeholder="What did you love? What could be better?"
             disabled={disabled}
             className={`
-              w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5
-              text-sm text-zinc-900 placeholder:text-zinc-400 resize-none
-              focus:outline-none focus:border-stone-400 focus:ring-2 focus:ring-stone-200
-              dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
-              dark:placeholder:text-zinc-500 dark:focus:border-stone-500 dark:focus:ring-stone-800
+              w-full rounded-xl border border-surface-elevated bg-background px-4 py-2.5
+              text-sm text-text-primary placeholder:text-text-secondary resize-none
+              focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30
               disabled:opacity-50 disabled:pointer-events-none
-              font-[family-name:var(--font-geist-sans)]
             `}
           />
         </fieldset>
@@ -158,7 +155,7 @@ export default function CustomerFeedbackForm({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Would Recommend */}
           <div>
-            <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
+            <p className="text-sm font-semibold text-text-primary mb-3">
               Would you recommend us?
             </p>
             <div className="flex gap-2">
@@ -181,7 +178,7 @@ export default function CustomerFeedbackForm({
 
           {/* Would Return */}
           <div>
-            <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
+            <p className="text-sm font-semibold text-text-primary mb-3">
               Would you come back?
             </p>
             <div className="flex gap-2">
@@ -213,11 +210,11 @@ export default function CustomerFeedbackForm({
             w-full rounded-xl px-6 py-3
             text-sm font-semibold
             transition-all duration-200 ease-in-out
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
             disabled:cursor-not-allowed disabled:opacity-40
             ${isValid && !disabled
-              ? "bg-stone-800 text-white hover:bg-stone-700 active:scale-[0.98] dark:bg-stone-200 dark:text-stone-900 dark:hover:bg-stone-300"
-              : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"
+              ? "bg-primary text-white hover:bg-primary/90 active:scale-[0.98]"
+              : "bg-surface-elevated text-text-secondary"
             }
           `}
         >
