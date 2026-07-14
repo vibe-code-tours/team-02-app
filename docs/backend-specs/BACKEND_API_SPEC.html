@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicSavor — Backend API Specification</title>
+    <style>
+        :root {
+            --primary: #E85D04;
+            --secondary: #FFB703;
+            --accent: #9D4EDD;
+            --bg: #0F0E17;
+            --surface: #1A1926;
+            --surface-elevated: #242334;
+            --text-primary: #F5F3F0;
+            --text-secondary: #A7A4B8;
+            --success: #2EC4B6;
+            --error: #E63946;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--surface-elevated);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .endpoint {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+        }
+
+        .method.post { background: var(--success); color: var(--bg); }
+        .method.get { background: var(--accent); color: white; }
+        .method.put { background: var(--secondary); color: var(--bg); }
+        .method.delete { background: var(--error); color: white; }
+
+        .path {
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        pre {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--surface-elevated);
+        }
+
+        code {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .json-key { color: var(--accent); }
+        .json-string { color: var(--success); }
+        .json-number { color: var(--primary); }
+        .json-boolean { color: var(--secondary); }
+
+        .note {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .warning {
+            background: rgba(230, 57, 70, 0.1);
+            border-left: 4px solid var(--error);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-elevated);
+        }
+
+        th {
+            background: var(--surface);
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: var(--surface);
+        }
+
+        .flow-diagram {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: var(--surface-elevated);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            border: 1px solid var(--accent);
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            margin: 0 0.5rem;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 SonicSavor</h1>
+            <p class="subtitle">Backend API Specification</p>
+            <div class="meta">
+                <span>Version: 1.0</span>
+                <span>Date: 14 Jul 2026</span>
+                <span>For: Backend Developer</span>
+            </div>
+        </header>
+
+        <section>
+            <h2>📋 Overview</h2>
+            <p>SonicSavor is a restaurant web app with:</p>
+            <ul>
+                <li><strong>OTP-based authentication</strong> (no passwords)</li>
+                <li><strong>Table booking system</strong> (22 tables, 5 types)</li>
+                <li><strong>Menu ordering</strong> with mood-based recommendations</li>
+                <li><strong>Session management</strong> (4-hour guest sessions)</li>
+            </ul>
+
+            <div class="note">
+                <strong>Tech Stack:</strong> Next.js 16 API Routes (App Router), TypeScript, In-memory storage (MVP)
+            </div>
+        </section>
+
+        <section>
+            <h2>🔐 1. Authentication System (OTP)</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/send-otp</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "email": "user@example.com"
+}</code></pre>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "success": true,
+  "message": "OTP sent to email",
+  "expiresIn": 600
+}</code></pre>
+
+                <p><strong>Business Logic:</strong></p>
+                <ul>
+                    <li>Generate 6-digit OTP code</li>
+                    <li>Store in memory: <code>{ email, code, expiresAt }</code></li>
+                    <li>OTP expires in 10 minutes</li>
+                    <li>Rate limit: 1 OTP per email per 60 seconds</li>
+                    <li><strong>Send OTP via email using Resend API</strong></li>
+                </ul>
+
+                <p><strong>Email Service (Resend):</strong></p>
+                <pre><code>import { Resend } from 'resend';
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+await resend.emails.send({
+  from: 'SonicSavor &lt;otp@sonicsavor.com&gt;',
+  to: email,
+  subject: 'Your SonicSavor Access Code',
+  html: \`
+    &lt;h1&gt;Your Access Code&lt;/h1&gt;
+    &lt;p style="font-size: 24px;"&gt;\${code}&lt;/p&gt;
+    &lt;p&gt;Expires in 10 minutes&lt;/p&gt;
+  \`
+});</code></pre>
+
+                <div class="note">
+                    <strong>Required:</strong> <code>RESEND_API_KEY</code> environment variable
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/verify-otp</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "email": "user@example.com",
+  "code": "472891"
+}</code></pre>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "success": true,
+  "sessionToken": "abc123xyz",
+  "isNewUser": true,
+  "expiresAt": "2026-07-14T18:00:00Z"
+}</code></pre>
+
+                <p><strong>Business Logic:</strong></p>
+                <ul>
+                    <li>Verify code matches and hasn't expired</li>
+                    <li>Check if email exists in user database</li>
+                    <li>Generate session token (JWT or random string)</li>
+                    <li>Store session with 4-hour expiry</li>
+                    <li>Delete used OTP (one-time use)</li>
+                </ul>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/auth/session</span></h3>
+
+                <p><strong>Headers:</strong> <code>Authorization: Bearer &lt;sessionToken&gt;</code></p>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "authenticated": true,
+  "user": {
+    "email": "user@example.com",
+    "name": "Sarah Chen",
+    "isRegistered": true,
+    "sessionExpiresAt": "2026-07-14T18:00:00Z"
+  }
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/logout</span></h3>
+
+                <p><strong>Headers:</strong> <code>Authorization: Bearer &lt;sessionToken&gt;</code></p>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "success": true,
+  "message": "Logged out successfully"
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🪑 2. Table Booking System</h2>
+
+            <h3>Table Configuration (22 tables)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Count</th>
+                        <th>Capacity</th>
+                        <th>Focus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Family</td><td>5</td><td>6-8 people</td><td>No</td></tr>
+                    <tr><td>Squad</td><td>5</td><td>4 people</td><td>No</td></tr>
+                    <tr><td>Duo</td><td>4</td><td>2 people</td><td>No</td></tr>
+                    <tr><td>Single</td><td>4</td><td>1 person</td><td>No</td></tr>
+                    <tr><td>Private</td><td>4</td><td>2-6 people</td><td><strong>YES</strong></td></tr>
+                </tbody>
+            </table>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/tables?date=2026-07-14&partySize=4</span></h3>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "date": "2026-07-14",
+  "tables": [
+    {
+      "id": "P1",
+      "type": "private",
+      "capacity": { "min": 2, "max": 6 },
+      "features": ["soundproof", "dedicated speaker", "dimmer"],
+      "location": "private wing",
+      "available": true,
+      "availableSlots": ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"]
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "available": 18,
+    "byType": {
+      "family": { "total": 5, "available": 4 },
+      "squad": { "total": 5, "available": 5 },
+      "duo": { "total": 4, "available": 3 },
+      "single": { "total": 4, "available": 4 },
+      "private": { "total": 4, "available": 2 }
+    }
+  }
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/tables/book</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "tableId": "P1",
+  "date": "2026-07-14",
+  "time": "19:00",
+  "partySize": 4,
+  "guestName": "Sarah Chen",
+  "guestEmail": "sarah@example.com",
+  "occasion": "date_night",
+  "specialRequests": "Anniversary dinner"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "booking": {
+    "id": "BK-20260714-P1",
+    "tableId": "P1",
+    "tableType": "private",
+    "date": "2026-07-14",
+    "time": "19:00",
+    "partySize": 4,
+    "status": "confirmed"
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🍽️ 3. Menu System</h2>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/menu</span></h3>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "categories": [
+    {
+      "id": "starters",
+      "name": "Starters",
+      "icon": "🥗",
+      "items": [
+        {
+          "id": "ST001",
+          "name": "Mohinga",
+          "description": "Traditional Myanmar fish noodle soup",
+          "price": 8.50,
+          "moodTags": ["comforting", "nostalgic"],
+          "available": true
+        }
+      ]
+    }
+  ]
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🛒 4. Order System</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/orders</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "bookingId": "BK-20260714-P1",
+  "items": [
+    { "menuItemId": "ST001", "quantity": 1 },
+    { "menuItemId": "MN003", "quantity": 2 }
+  ],
+  "mood": "cozy evening"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "order": {
+    "id": "ORD-20260714-001",
+    "status": "received",
+    "total": 54.45,
+    "estimatedReady": "2026-07-14T19:25:00Z"
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>⭐ 5. Feedback System</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/feedback</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "bookingId": "BK-20260714-P1",
+  "overallRating": 5,
+  "foodQuality": 5,
+  "ambianceRating": 4,
+  "playlistMatch": 5,
+  "comments": "Amazing experience!",
+  "wouldRecommend": true,
+  "wouldReturn": true
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/register</span></h3>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "name": "Sarah Chen",
+  "phone": "+95 9 123 456 789"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "user": {
+    "id": "USR-001",
+    "email": "sarah@example.com",
+    "name": "Sarah Chen",
+    "isRegistered": true
+  },
+  "benefits": [
+    "Order history saved",
+    "Favorite dishes tracked",
+    "Faster checkout next time",
+    "Rewards points: +100"
+  ]
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🔄 6. Authentication Flow</h2>
+
+            <div class="flow-diagram">
+                <div class="flow-step">1. User enters email</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">2. POST /api/auth/send-otp</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">3. User receives OTP</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">4. POST /api/auth/verify-otp</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">5. Receive sessionToken</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">6. Store in localStorage</div>
+            </div>
+        </section>
+
+        <footer>
+            <p>🎵 SonicSavor — Backend API Specification v1.0</p>
+            <p>Questions? Contact the frontend team.</p>
+        </footer>
+    </div>
+</body>
+</html>

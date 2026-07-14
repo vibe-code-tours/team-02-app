@@ -60,3 +60,7 @@ Thumbs.db
 # Local AI agent Configurations (Personal Developer Rules)
 .claude.local.md
 .claudes/local-resources/
+
+# Local developer notes (not pushed to GitHub)
+*.local.md
+local-notes/
