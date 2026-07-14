@@ -58,7 +58,6 @@ Thumbs.db
 .vercel
 
 # Local AI agent Configurations (Personal Developer Rules)
-CLAUDE.md
 .claude.local.md
 .claudes/local-resources/
 
