@@ -63,16 +63,53 @@ export async function embedTexts(texts: string[]): Promise<number[][]> {
  */
 export async function searchByMood(
   query: string,
-  limit: number = 3
+  limit: number = 3,
+  cuisine?: string
 ): Promise<MenuItem[]> {
-  console.log(`[Embeddings] Searching for: "${query}" (limit: ${limit})`);
+  console.log(`[Embeddings] Local balanced search for: "${query}" (limit: ${limit}, cuisine: ${cuisine || "any"})`);
 
+  // 1. Embed query
   const queryEmbedding = await embedText(query);
-  const results = await searchByEmbedding(queryEmbedding, limit);
+
+  // 2. Fetch all menu items with embeddings
+  const { getAllMenuItemsWithEmbeddings } = await import("./menu-queries");
+  const items = await getAllMenuItemsWithEmbeddings();
+
+  // Filter items by cuisine if specified
+  let filteredItems = items;
+  if (cuisine && cuisine.toLowerCase() !== "all" && cuisine.toLowerCase() !== "any") {
+    filteredItems = items.filter(
+      (item) => item.cuisine.toLowerCase() === cuisine.toLowerCase()
+    );
+  }
+
+  // 3. Compute cosine similarity (dot product of normalized vectors)
+  const scored = filteredItems.map((item) => {
+    let score = 0;
+    if (item.embedding) {
+      score = queryEmbedding.reduce((sum, val, i) => sum + val * item.embedding![i], 0);
+    }
+    return { item, score };
+  });
+
+  // 4. Group scored items by course and sort descending
+  const starters = scored.filter((s) => s.item.course === "starter").sort((a, b) => b.score - a.score);
+  const mains = scored.filter((s) => s.item.course === "main").sort((a, b) => b.score - a.score);
+  const desserts = scored.filter((s) => s.item.course === "dessert").sort((a, b) => b.score - a.score);
+
+  // 5. Select the top M matches for each course.
+  // We want to ensure at least Math.max(3, limit) candidates of each course.
+  const M = Math.max(3, limit);
+
+  const results: MenuItem[] = [
+    ...starters.slice(0, M).map((s) => s.item),
+    ...mains.slice(0, M).map((m) => m.item),
+    ...desserts.slice(0, M).map((d) => d.item),
+  ];
 
   console.log(
-    `[Embeddings] Results:`,
-    results.map((r) => r.name)
+    `[Embeddings] Balanced Candidates (${cuisine || "any"}):`,
+    results.map((r) => `[${r.course}] ${r.name}`)
   );
 
   return results;

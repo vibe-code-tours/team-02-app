@@ -40,7 +40,7 @@ export default function StarRating({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <span className="text-sm font-medium text-zinc-700 dark:text-stone-300">
         {label}
       </span>
       <div
@@ -64,9 +64,9 @@ export default function StarRating({
               className={`
                 p-0.5 rounded-sm cursor-pointer
                 transition-all duration-150
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-1
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1
                 disabled:cursor-not-allowed disabled:opacity-40
-                ${isActive ? "text-amber-400" : "text-zinc-300 dark:text-zinc-500"}
+                ${isActive ? "text-amber-400" : "text-zinc-300 dark:text-stone-500"}
                 hover:scale-110 active:scale-95
               `}
             >
@@ -75,7 +75,7 @@ export default function StarRating({
           );
         })}
         {value > 0 && (
-          <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400 tabular-nums">
+          <span className="ml-2 text-sm text-zinc-500 dark:text-stone-400 tabular-nums">
             {value}/{maxStars}
           </span>
         )}

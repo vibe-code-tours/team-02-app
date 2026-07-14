@@ -11,7 +11,7 @@ import { generateMealRecommendation } from "@/lib/openai";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { mood } = body;
+    const { mood, cuisine } = body;
 
     if (!mood || typeof mood !== "string" || mood.trim() === "") {
       return NextResponse.json(
@@ -21,10 +21,10 @@ export async function POST(request: Request) {
     }
 
     // 1. Search static menu items matching the user's mood query semantically
-    const candidates = await searchByMood(mood);
+    const candidates = await searchByMood(mood, 3, cuisine);
 
     // 2. Pass candidates to OpenAI for fine-tuned 3-course selection and matching Spotify search query
-    const recommendation = await generateMealRecommendation(mood, candidates);
+    const recommendation = await generateMealRecommendation(mood, candidates, cuisine);
 
     return NextResponse.json(recommendation);
   } catch (error: unknown) {

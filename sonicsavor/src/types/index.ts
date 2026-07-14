@@ -18,6 +18,8 @@ export interface CourseRecommendation {
   moodTags: string[];
   description: string;
   icon: string;
+  price: number;
+  dietaryTags: string[];
 }
 
 export interface Recommendation {

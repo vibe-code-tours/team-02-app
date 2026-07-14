@@ -37,12 +37,12 @@ export default function AccessCodeForm({ onAuthenticated }: AccessCodeFormProps)
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-stone-950 px-4">
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold text-center text-zinc-900 dark:text-zinc-50 mb-2">
+        <h1 className="text-2xl font-bold text-center text-zinc-900 dark:text-stone-50 mb-2 font-[family-name:var(--font-display)]">
           SonicSavor
         </h1>
-        <p className="text-sm text-center text-zinc-500 dark:text-zinc-400 mb-8">
+        <p className="text-sm text-center text-zinc-500 dark:text-stone-400 mb-8">
           Enter your access code to continue
         </p>
 
@@ -54,12 +54,12 @@ export default function AccessCodeForm({ onAuthenticated }: AccessCodeFormProps)
             placeholder="XXXX-XXXX"
             maxLength={9}
             className="w-full px-4 py-3 text-center text-lg font-mono tracking-widest
-              bg-white dark:bg-zinc-900
-              border border-zinc-200 dark:border-zinc-800
+              bg-white dark:bg-stone-900
+              border border-zinc-200 dark:border-stone-800
               rounded-xl
-              text-zinc-900 dark:text-zinc-50
+              text-zinc-900 dark:text-stone-50
               placeholder:text-zinc-300 dark:placeholder:text-zinc-700
-              focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+              focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-stone-500"
             autoFocus
           />
 
@@ -73,9 +73,9 @@ export default function AccessCodeForm({ onAuthenticated }: AccessCodeFormProps)
             type="submit"
             disabled={!code.trim() || isLoading}
             className="w-full py-3 rounded-xl font-medium
-              bg-zinc-900 text-white
-              dark:bg-zinc-50 dark:text-zinc-900
-              hover:opacity-90 transition
+              bg-stone-800 text-white
+              dark:bg-stone-200 dark:text-stone-900
+              hover:opacity-90 transition cursor-pointer
               disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "Verifying..." : "Enter"}
