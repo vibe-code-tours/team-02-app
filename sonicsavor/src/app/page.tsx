@@ -1,147 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import MoodInput from "@/components/ui/MoodInput";
-import MoodChips from "@/components/ui/MoodChips";
-import LoadingState from "@/components/ui/LoadingState";
-import RecommendationGrid from "@/components/ui/RecommendationGrid";
-import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
-import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
-import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
-import type { Recommendation, GuestRegistration, CourseRecommendation } from "@/types";
-
-// ── Mock data ──────────────────────────────────────────────
-
-const MOCK_COURSES: CourseRecommendation[] = [
-  {
-    course: "starter",
-    dishName: "Mohinga",
-    cuisine: "Myanmar",
-    moodTags: ["comforting", "nostalgic", "warming"],
-    description:
-      "The warm, aromatic fish broth is the ultimate comfort — like a gentle embrace for your tired soul.",
-    icon: "🍜",
-  },
-  {
-    course: "main",
-    dishName: "Mushroom Risotto",
-    cuisine: "Western",
-    moodTags: ["comforting", "elegant", "calming"],
-    description:
-      "Creamy, earthy, and meditative. The slow rhythm of risotto mirrors the slowing down you need right now.",
-    icon: "🍄",
-  },
-  {
-    course: "dessert",
-    dishName: "Apple Crumble",
-    cuisine: "Western",
-    moodTags: ["nostalgic", "warm", "homey"],
-    description:
-      "Warm cinnamon apples and crunchy crumble — like a blanket and a fireplace in dessert form.",
-    icon: "🍎",
-  },
-];
-
-const MOCK_SPOTIFY_URL =
-  "https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U?utm_source=generator";
-
-// ── Page ───────────────────────────────────────────────────
 
 export default function Home() {
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>({
-    courses: MOCK_COURSES,
-    playlistQuery: "acoustic chill cozy evening playlist",
-  });
-  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(MOCK_SPOTIFY_URL);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Mock submit — just toggles loading briefly then shows mock data
-  const handleMoodSubmit = async (mood: string) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
     setIsLoading(true);
-    setErrorMsg(null);
-    // Simulate a short load
-    await new Promise((r) => setTimeout(r, 1500));
-    setRecommendation({ courses: MOCK_COURSES, playlistQuery: mood });
-    setSpotifyUrl(MOCK_SPOTIFY_URL);
-    setIsLoading(false);
-  };
-
-  const handleGuestSubmit = (data: GuestRegistration) => {
-    console.log("Guest registration:", data);
-    alert(`Registration received for ${data.name} (${data.partySize} guests)`);
-  };
-
-  const handleFeedbackSubmit = (data: unknown) => {
-    console.log("Feedback:", data);
-    alert("Thank you for your feedback!");
+    // TODO: Call API to send OTP
+    console.log("Sending OTP to:", email);
+    setTimeout(() => {
+      setIsLoading(false);
+      alert("OTP sent! (Check console for demo)");
+    }, 1500);
   };
 
   return (
-    <main className="flex flex-col flex-1 items-center justify-start min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4 sm:px-6 py-12 sm:py-16">
-      {/* Hero */}
-      <header className="text-center mb-6 sm:mb-10 max-w-xl">
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          SonicSavor
-        </h1>
-        <p className="mt-3 text-base text-zinc-500 dark:text-zinc-400">
-          Tell us your mood — we&apos;ll pair a 3-course meal with the perfect
-          playlist.
-        </p>
-      </header>
-
-      {/* Mood input */}
-      <section className="w-full flex flex-col items-center gap-5">
-        <MoodInput onSubmit={handleMoodSubmit} disabled={isLoading} />
-        <MoodChips onSelect={handleMoodSubmit} disabled={isLoading} />
-      </section>
-
-      {/* Error message */}
-      {errorMsg && (
+    <main className="min-h-screen bg-[#0F0E17] flex flex-col">
+      {/* Hero Section with Animated Gradient */}
+      <section className="relative flex-1 flex flex-col items-center justify-center px-4 py-16 overflow-hidden">
+        {/* Animated gradient background */}
         <div
-          role="alert"
-          className="mt-8 w-full max-w-xl rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 animate-[fadeIn_0.2s_ease-out]"
-        >
-          {errorMsg}
-        </div>
-      )}
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: "linear-gradient(135deg, #0F0E17 0%, #9D4EDD 50%, #0F0E17 100%)",
+            backgroundSize: "400% 400%",
+            animation: "gradientShift 10s ease infinite",
+          }}
+        />
 
-      {/* Loading skeleton */}
-      {isLoading && (
-        <div className="mt-10 sm:mt-12 w-full animate-[fadeIn_0.3s_ease-out]">
-          <LoadingState />
+        {/* Waveform decoration */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 overflow-hidden opacity-20">
+          <svg
+            viewBox="0 0 1200 120"
+            className="w-full h-full"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,60 Q150,20 300,60 T600,60 T900,60 T1200,60 L1200,120 L0,120 Z"
+              fill="#E85D04"
+              opacity="0.5"
+            />
+            <path
+              d="M0,70 Q150,30 300,70 T600,70 T900,70 T1200,70 L1200,120 L0,120 Z"
+              fill="#E85D04"
+              opacity="0.3"
+            />
+          </svg>
         </div>
-      )}
 
-      {/* Results */}
-      {!isLoading && recommendation && (
-        <div
-          className="mt-10 sm:mt-12 w-full flex flex-col items-center gap-8 sm:gap-10 animate-[fadeIn_0.4s_ease-out]"
-          aria-live="polite"
-        >
-          <RecommendationGrid courses={recommendation.courses} />
-          {spotifyUrl && <SpotifyEmbed url={spotifyUrl} />}
-        </div>
-      )}
+        <style jsx>{`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
 
-      {/* ── Guest Registration (preview) ───────────────── */}
-      <section className="mt-16 w-full animate-[fadeIn_0.4s_ease-out]">
-        <div className="text-center mb-6">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Preview
-          </span>
-        </div>
-        <GuestRegistrationForm onSubmit={handleGuestSubmit} />
-      </section>
+        {/* Content */}
+        <div className="relative z-10 text-center max-w-xl">
+          {/* Logo */}
+          <div className="mb-6">
+            <span className="text-5xl">🎵</span>
+          </div>
 
-      {/* ── Customer Feedback (preview) ────────────────── */}
-      <section className="mt-16 w-full animate-[fadeIn_0.4s_ease-out]">
-        <div className="text-center mb-6">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Preview
-          </span>
+          {/* Title */}
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#F5F3F0] mb-4">
+            SonicSavor
+          </h1>
+
+          {/* Tagline */}
+          <p className="text-lg text-[#A7A4B8] mb-10">
+            Where music meets flavor
+          </p>
+
+          {/* Email Input Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="w-full px-5 py-4 bg-[#1A1926] border border-[#242334] rounded-xl text-[#F5F3F0] placeholder-[#A7A4B8] focus:outline-none focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 transition-all text-lg"
+              />
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A7A4B8]">
+                📧
+              </span>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || !email}
+              className="w-full py-4 bg-[#E85D04] hover:bg-[#E85D04]/90 disabled:bg-[#242334] disabled:text-[#A7A4B8] text-[#F5F3F0] font-semibold rounded-xl transition-all text-lg"
+            >
+              {isLoading ? "Sending..." : "✨ Get Access Code"}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-8">
+            <div className="flex-1 h-px bg-[#242334]" />
+            <span className="text-sm text-[#A7A4B8]">or</span>
+            <div className="flex-1 h-px bg-[#242334]" />
+          </div>
+
+          {/* Sign in hint */}
+          <p className="text-sm text-[#A7A4B8]">
+            Returning? Just enter your email above — we&apos;ll recognize you. 💜
+          </p>
         </div>
-        <CustomerFeedbackForm onSubmit={handleFeedbackSubmit} />
       </section>
     </main>
   );

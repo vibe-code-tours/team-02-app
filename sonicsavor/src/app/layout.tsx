@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SonicSavor — Mood-Driven Dining",
-  description: "Tell us your mood — we'll pair a 3-course meal with the perfect playlist.",
+  title: "SonicSavor — Where Music Meets Flavor",
+  description: "Mood-driven dining experience. Tell us your vibe, we'll pair a 3-course meal with the perfect playlist.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#0F0E17]">{children}</body>
     </html>
   );
 }
