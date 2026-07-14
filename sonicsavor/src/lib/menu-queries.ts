@@ -59,6 +59,7 @@ export async function searchByEmbedding(
   queryEmbedding: number[],
   limit: number = 3
 ): Promise<MenuItem[]> {
+  // @ts-expect-error -- match_menu_items RPC not in generated DB types
   const { data, error } = await supabase.rpc("match_menu_items", {
     query_embedding: queryEmbedding,
     match_count: limit,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MoodInput from "@/components/ui/MoodInput";
 import MoodChips from "@/components/ui/MoodChips";
 import LoadingState from "@/components/ui/LoadingState";
@@ -8,15 +8,38 @@ import RecommendationGrid from "@/components/ui/RecommendationGrid";
 import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
 import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
 import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
+import AccessCodeForm from "@/components/auth/AccessCodeForm";
 import type { Recommendation, GuestRegistration } from "@/types";
 
 // ── Page ───────────────────────────────────────────────────
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Check session on mount
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((res) => setIsAuthenticated(res.ok))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  // Show loading while checking session
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <div className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Not authenticated — show code entry
+  if (!isAuthenticated) {
+    return <AccessCodeForm onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
 
   const handleMoodSubmit = async (mood: string) => {
     setIsLoading(true);
@@ -64,10 +87,23 @@ export default function Home() {
     alert("Thank you for your feedback!");
   };
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/session", { method: "DELETE" });
+    setIsAuthenticated(false);
+  };
+
   return (
     <main className="flex flex-col flex-1 items-center justify-start min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4 sm:px-6 py-12 sm:py-16">
       {/* Hero */}
       <header className="text-center mb-6 sm:mb-10 max-w-xl">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
+          >
+            Logout
+          </button>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           SonicSavor
         </h1>
