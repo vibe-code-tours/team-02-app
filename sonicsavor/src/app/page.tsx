@@ -1,148 +1,113 @@
 "use client";
 
 import { useState } from "react";
-import MoodInput from "@/components/ui/MoodInput";
-import MoodChips from "@/components/ui/MoodChips";
-import LoadingState from "@/components/ui/LoadingState";
-import RecommendationGrid from "@/components/ui/RecommendationGrid";
-import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
-import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
-import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
-import type { Recommendation, GuestRegistration, CourseRecommendation } from "@/types";
+import HeroSection from "@/components/landing/HeroSection";
+import EmailInput from "@/components/landing/EmailInput";
+import AccessCodeEntry from "@/components/landing/AccessCodeEntry";
 
-// ── Mock data ──────────────────────────────────────────────
-
-const MOCK_COURSES: CourseRecommendation[] = [
-  {
-    course: "starter",
-    dishName: "Mohinga",
-    cuisine: "Myanmar",
-    moodTags: ["comforting", "nostalgic", "warming"],
-    description:
-      "The warm, aromatic fish broth is the ultimate comfort — like a gentle embrace for your tired soul.",
-    icon: "🍜",
-  },
-  {
-    course: "main",
-    dishName: "Mushroom Risotto",
-    cuisine: "Western",
-    moodTags: ["comforting", "elegant", "calming"],
-    description:
-      "Creamy, earthy, and meditative. The slow rhythm of risotto mirrors the slowing down you need right now.",
-    icon: "🍄",
-  },
-  {
-    course: "dessert",
-    dishName: "Apple Crumble",
-    cuisine: "Western",
-    moodTags: ["nostalgic", "warm", "homey"],
-    description:
-      "Warm cinnamon apples and crunchy crumble — like a blanket and a fireplace in dessert form.",
-    icon: "🍎",
-  },
-];
-
-const MOCK_SPOTIFY_URL =
-  "https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U?utm_source=generator";
-
-// ── Page ───────────────────────────────────────────────────
+type ViewMode = "email" | "otp";
 
 export default function Home() {
+  const [viewMode, setViewMode] = useState<ViewMode>("email");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>({
-    courses: MOCK_COURSES,
-    playlistQuery: "acoustic chill cozy evening playlist",
-  });
-  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(MOCK_SPOTIFY_URL);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock submit — just toggles loading briefly then shows mock data
-  const handleMoodSubmit = async (mood: string) => {
+  const handleEmailSubmit = async (submittedEmail: string) => {
+    setEmail(submittedEmail);
     setIsLoading(true);
-    setErrorMsg(null);
-    // Simulate a short load
-    await new Promise((r) => setTimeout(r, 1500));
-    setRecommendation({ courses: MOCK_COURSES, playlistQuery: mood });
-    setSpotifyUrl(MOCK_SPOTIFY_URL);
-    setIsLoading(false);
+    setError(null);
+
+    try {
+      console.log("Sending OTP to:", submittedEmail);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setViewMode("otp");
+    } catch {
+      setError("Failed to send OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGuestSubmit = (data: GuestRegistration) => {
-    console.log("Guest registration:", data);
-    alert(`Registration received for ${data.name} (${data.partySize} guests)`);
+  const handleOtpSubmit = async (code: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      console.log("Verifying code:", code);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (code.length === 6) {
+        alert(`Code verified! Welcome to SonicSavor.\n\nEmail: ${email}\nCode: ${code}`);
+      } else {
+        setError("Invalid code. Please try again.");
+      }
+    } catch {
+      setError("Verification failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleFeedbackSubmit = (data: unknown) => {
-    console.log("Feedback:", data);
-    alert("Thank you for your feedback!");
+  const handleBackToEmail = () => {
+    setViewMode("email");
+    setError(null);
   };
 
   return (
-    <main className="flex flex-col flex-1 items-center justify-start min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4 sm:px-6 py-12 sm:py-16">
-      {/* Hero */}
-      <header className="text-center mb-6 sm:mb-10 max-w-xl">
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          SonicSavor
-        </h1>
-        <p className="mt-3 text-base text-zinc-500 dark:text-zinc-400">
-          Tell us your mood — we&apos;ll pair a 3-course meal with the perfect
-          playlist.
-        </p>
-      </header>
+    <main className="min-h-screen bg-[#0F0E17]">
+      <HeroSection>
+        {viewMode === "email" ? (
+          <div className="space-y-6">
+            <EmailInput
+              onSubmit={handleEmailSubmit}
+              disabled={isLoading}
+              isLoading={isLoading}
+            />
 
-      {/* Mood input */}
-      <section className="w-full flex flex-col items-center gap-5">
-        <MoodInput onSubmit={handleMoodSubmit} disabled={isLoading} />
-        <MoodChips onSelect={handleMoodSubmit} disabled={isLoading} />
-      </section>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-[#242334]" />
+              <span className="text-sm text-[#A7A4B8]">or</span>
+              <div className="flex-1 h-px bg-[#242334]" />
+            </div>
 
-      {/* Error message */}
-      {errorMsg && (
-        <div
-          role="alert"
-          className="mt-8 w-full max-w-xl rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 animate-[fadeIn_0.2s_ease-out]"
-        >
-          {errorMsg}
-        </div>
-      )}
+            <p className="text-sm text-[#A7A4B8] text-center">
+              Returning? Just enter your email above — we&apos;ll recognize you.
+            </p>
 
-      {/* Loading skeleton */}
-      {isLoading && (
-        <div className="mt-10 sm:mt-12 w-full animate-[fadeIn_0.3s_ease-out]">
-          <LoadingState />
-        </div>
-      )}
+            {error && (
+              <div className="text-center text-[#E63946] text-sm" role="alert">
+                {error}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <button
+              onClick={handleBackToEmail}
+              disabled={isLoading}
+              className="text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors duration-200 text-sm flex items-center gap-2 mx-auto cursor-pointer"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Back to email
+            </button>
 
-      {/* Results */}
-      {!isLoading && recommendation && (
-        <div
-          className="mt-10 sm:mt-12 w-full flex flex-col items-center gap-8 sm:gap-10 animate-[fadeIn_0.4s_ease-out]"
-          aria-live="polite"
-        >
-          <RecommendationGrid courses={recommendation.courses} />
-          {spotifyUrl && <SpotifyEmbed url={spotifyUrl} />}
-        </div>
-      )}
+            <p className="text-sm text-[#A7A4B8] text-center">
+              Code sent to <span className="text-[#F5F3F0]">{email}</span>
+            </p>
 
-      {/* ── Guest Registration (preview) ───────────────── */}
-      <section className="mt-16 w-full animate-[fadeIn_0.4s_ease-out]">
-        <div className="text-center mb-6">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Preview
-          </span>
-        </div>
-        <GuestRegistrationForm onSubmit={handleGuestSubmit} />
-      </section>
-
-      {/* ── Customer Feedback (preview) ────────────────── */}
-      <section className="mt-16 w-full animate-[fadeIn_0.4s_ease-out]">
-        <div className="text-center mb-6">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Preview
-          </span>
-        </div>
-        <CustomerFeedbackForm onSubmit={handleFeedbackSubmit} />
-      </section>
+            <AccessCodeEntry
+              onSubmit={handleOtpSubmit}
+              disabled={isLoading}
+              isLoading={isLoading}
+              error={error}
+            />
+          </div>
+        )}
+      </HeroSection>
     </main>
   );
 }
