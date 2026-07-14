@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MoodInput from "@/components/ui/MoodInput";
 import MoodChips from "@/components/ui/MoodChips";
 import LoadingState from "@/components/ui/LoadingState";
@@ -8,63 +8,73 @@ import RecommendationGrid from "@/components/ui/RecommendationGrid";
 import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
 import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
 import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
-import type { Recommendation, GuestRegistration, CourseRecommendation } from "@/types";
-
-// ── Mock data ──────────────────────────────────────────────
-
-const MOCK_COURSES: CourseRecommendation[] = [
-  {
-    course: "starter",
-    dishName: "Mohinga",
-    cuisine: "Myanmar",
-    moodTags: ["comforting", "nostalgic", "warming"],
-    description:
-      "The warm, aromatic fish broth is the ultimate comfort — like a gentle embrace for your tired soul.",
-    icon: "🍜",
-  },
-  {
-    course: "main",
-    dishName: "Mushroom Risotto",
-    cuisine: "Western",
-    moodTags: ["comforting", "elegant", "calming"],
-    description:
-      "Creamy, earthy, and meditative. The slow rhythm of risotto mirrors the slowing down you need right now.",
-    icon: "🍄",
-  },
-  {
-    course: "dessert",
-    dishName: "Apple Crumble",
-    cuisine: "Western",
-    moodTags: ["nostalgic", "warm", "homey"],
-    description:
-      "Warm cinnamon apples and crunchy crumble — like a blanket and a fireplace in dessert form.",
-    icon: "🍎",
-  },
-];
-
-const MOCK_SPOTIFY_URL =
-  "https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U?utm_source=generator";
+import AccessCodeForm from "@/components/auth/AccessCodeForm";
+import type { Recommendation, GuestRegistration } from "@/types";
 
 // ── Page ───────────────────────────────────────────────────
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>({
-    courses: MOCK_COURSES,
-    playlistQuery: "acoustic chill cozy evening playlist",
-  });
-  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(MOCK_SPOTIFY_URL);
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
+  const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Mock submit — just toggles loading briefly then shows mock data
+  // Check session on mount
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((res) => setIsAuthenticated(res.ok))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  // Show loading while checking session
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <div className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Not authenticated — show code entry
+  if (!isAuthenticated) {
+    return <AccessCodeForm onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
   const handleMoodSubmit = async (mood: string) => {
     setIsLoading(true);
     setErrorMsg(null);
-    // Simulate a short load
-    await new Promise((r) => setTimeout(r, 1500));
-    setRecommendation({ courses: MOCK_COURSES, playlistQuery: mood });
-    setSpotifyUrl(MOCK_SPOTIFY_URL);
-    setIsLoading(false);
+    setRecommendation(null);
+    setSpotifyUrl(null);
+
+    try {
+      // 1. Get meal recommendation from OpenAI
+      const recRes = await fetch("/api/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mood }),
+      });
+
+      if (!recRes.ok) {
+        const err = await recRes.json();
+        throw new Error(err.error || "Failed to get recommendation");
+      }
+
+      const rec: Recommendation = await recRes.json();
+      setRecommendation(rec);
+
+      // 2. Get Spotify playlist embed URL
+      const spotRes = await fetch(`/api/spotify?q=${encodeURIComponent(rec.playlistQuery)}`);
+      if (spotRes.ok) {
+        const spotData = await spotRes.json();
+        setSpotifyUrl(spotData.url);
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGuestSubmit = (data: GuestRegistration) => {
@@ -77,10 +87,23 @@ export default function Home() {
     alert("Thank you for your feedback!");
   };
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/session", { method: "DELETE" });
+    setIsAuthenticated(false);
+  };
+
   return (
     <main className="flex flex-col flex-1 items-center justify-start min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4 sm:px-6 py-12 sm:py-16">
       {/* Hero */}
       <header className="text-center mb-6 sm:mb-10 max-w-xl">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
+          >
+            Logout
+          </button>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           SonicSavor
         </h1>

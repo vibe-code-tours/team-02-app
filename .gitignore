@@ -60,3 +60,6 @@ Thumbs.db
 # Local AI agent Configurations (Personal Developer Rules)
 .claude.local.md
 .claudes/local-resources/
+
+# Supabase local
+sonicsavor/supabase/
