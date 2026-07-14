@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { MenuItem } from "@/types";
+import { michelinMenuItems } from "./michelin-menu-data";
 
 // ── Types ──────────────────────────────────────────────────
 
@@ -46,7 +47,9 @@ export async function getAllMenuItems(): Promise<MenuItem[]> {
     throw error;
   }
 
-  return (data as MenuRow[]).map(toMenuItem);
+  const dbItems = (data as MenuRow[]).map(toMenuItem);
+  const michelinClean = michelinMenuItems.map(({ embedding, ...rest }) => rest);
+  return [...dbItems, ...michelinClean];
 }
 
 // ── Vector similarity search ────────────────────────────────
@@ -59,7 +62,6 @@ export async function searchByEmbedding(
   queryEmbedding: number[],
   limit: number = 3
 ): Promise<MenuItem[]> {
-  // @ts-expect-error -- match_menu_items RPC not in generated DB types
   const { data, error } = await supabase.rpc("match_menu_items", {
     query_embedding: queryEmbedding,
     match_count: limit,
@@ -71,4 +73,25 @@ export async function searchByEmbedding(
   }
 
   return (data as MenuRow[]).map(toMenuItem);
+}
+
+/**
+ * Fetch all menu items including their embedding vectors.
+ */
+export async function getAllMenuItemsWithEmbeddings(): Promise<(MenuItem & { embedding: number[] | null })[]> {
+  const { data, error } = await supabase
+    .from("menu_items")
+    .select("id, name, description, cuisine, course, price, dietary_tags, mood_tags, mood_description, image_url, embedding");
+
+  if (error) {
+    console.error("[Supabase] Error fetching menu items with embeddings:", error.message);
+    throw error;
+  }
+
+  const dbItems = (data as MenuRow[]).map((row) => ({
+    ...toMenuItem(row),
+    embedding: typeof row.embedding === "string" ? JSON.parse(row.embedding) : row.embedding,
+  }));
+
+  return [...dbItems, ...michelinMenuItems];
 }

@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Navbar from "@/components/ui/Navbar";
 import MoodInput from "@/components/ui/MoodInput";
 import MoodChips from "@/components/ui/MoodChips";
+import CuisineSelector from "@/components/ui/CuisineSelector";
 import LoadingState from "@/components/ui/LoadingState";
 import RecommendationGrid from "@/components/ui/RecommendationGrid";
-import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
+import SpotifyPlayer from "@/components/spotify/SpotifyPlayer";
+import SpotifyLogin from "@/components/spotify/SpotifyLogin";
 import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
 import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
 import AccessCodeForm from "@/components/auth/AccessCodeForm";
@@ -16,8 +19,11 @@ import type { Recommendation, GuestRegistration } from "@/types";
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCuisine, setSelectedCuisine] = useState<string>("all");
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null);
+  const [spotifyPlaylistId, setSpotifyPlaylistId] = useState<string | null>(null);
+  const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Check session on mount
@@ -30,8 +36,8 @@ export default function Home() {
   // Show loading while checking session
   if (isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
-        <div className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-stone-950">
+        <div className="w-8 h-8 border-2 border-zinc-300 border-t-stone-900 rounded-full animate-spin" />
       </div>
     );
   }
@@ -52,7 +58,7 @@ export default function Home() {
       const recRes = await fetch("/api/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mood }),
+        body: JSON.stringify({ mood, cuisine: selectedCuisine }),
       });
 
       if (!recRes.ok) {
@@ -63,11 +69,12 @@ export default function Home() {
       const rec: Recommendation = await recRes.json();
       setRecommendation(rec);
 
-      // 2. Get Spotify playlist embed URL
+      // 2. Get Spotify playlist
       const spotRes = await fetch(`/api/spotify?q=${encodeURIComponent(rec.playlistQuery)}`);
       if (spotRes.ok) {
         const spotData = await spotRes.json();
         setSpotifyUrl(spotData.url);
+        setSpotifyPlaylistId(spotData.playlistId);
       }
     } catch (err) {
       console.error(err);
@@ -93,25 +100,28 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col flex-1 items-center justify-start min-h-screen bg-zinc-50 dark:bg-zinc-950 px-4 sm:px-6 py-12 sm:py-16">
-      {/* Hero */}
-      <header className="text-center mb-6 sm:mb-10 max-w-xl">
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
-          >
-            Logout
-          </button>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          SonicSavor
-        </h1>
-        <p className="mt-3 text-base text-zinc-500 dark:text-zinc-400">
-          Tell us your mood — we&apos;ll pair a 3-course meal with the perfect
-          playlist.
-        </p>
-      </header>
+    <>
+      <Navbar onLogout={handleLogout} />
+      <main className="flex flex-col flex-1 items-center justify-start bg-zinc-50 dark:bg-stone-950 px-4 sm:px-6 py-10 sm:py-14">
+        {/* Hero */}
+        <header className="text-center mb-6 sm:mb-10 max-w-xl">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-stone-50 font-[family-name:var(--font-display)]">
+            SonicSavor
+          </h1>
+          <p className="mt-3 text-base text-zinc-500 dark:text-stone-400">
+            Tell us your mood — we&apos;ll pair a 3-course meal with the perfect
+            playlist.
+          </p>
+        </header>
+
+      {/* Cuisine selector */}
+      <section className="w-full mb-6">
+        <CuisineSelector
+          selected={selectedCuisine}
+          onChange={setSelectedCuisine}
+          disabled={isLoading}
+        />
+      </section>
 
       {/* Mood input */}
       <section className="w-full flex flex-col items-center gap-5">
@@ -143,7 +153,13 @@ export default function Home() {
           aria-live="polite"
         >
           <RecommendationGrid courses={recommendation.courses} />
-          {spotifyUrl && <SpotifyEmbed url={spotifyUrl} />}
+          {spotifyUrl && (
+            <SpotifyPlayer
+              embedUrl={spotifyUrl}
+              playlistId={spotifyPlaylistId}
+              isSpotifyConnected={isSpotifyConnected}
+            />
+          )}
         </div>
       )}
 
@@ -166,6 +182,7 @@ export default function Home() {
         </div>
         <CustomerFeedbackForm onSubmit={handleFeedbackSubmit} />
       </section>
-    </main>
+      </main>
+    </>
   );
 }

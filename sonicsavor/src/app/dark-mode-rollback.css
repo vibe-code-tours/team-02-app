@@ -1,0 +1,26 @@
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE ROLLBACK — Current "Warm Charcoal" palette
+   Saved: 2026-07-15
+   To restore: copy the .dark block below into globals.css
+   ═══════════════════════════════════════════════════════════ */
+
+.dark {
+  /* 5-Star Luxury Dark Mode — deep warm charcoal + restrained gold */
+  --background: #0F0D0B;      /* custom — near-black with warm brown undertone */
+  --foreground: #F5F0EB;      /* custom — warm off-white, not pure white */
+  --surface: #1A1714;         /* custom — warm charcoal card surface */
+  --surface-elevated: #242019;/* custom — slightly lighter for hover */
+  --border: #33302B;          /* custom — subtle warm border */
+  --text-primary: #F5F0EB;    /* headings */
+  --text-secondary: #9C9590;  /* muted labels */
+  --text-body: #C8C2BC;       /* body text */
+  --text-muted: #6B6560;      /* hints */
+}
+
+/* Component overrides for this palette:
+   - Navbar: dark:bg-stone-950/80, dark:border-stone-800
+   - Cards: dark:bg-stone-900, dark:border-stone-800
+   - Buttons (dark): dark:bg-stone-200 dark:text-stone-900
+   - Focus rings (dark): dark:focus:ring-stone-500
+   - Text (dark): dark:text-stone-50/100/200/300/400/500
+*/

@@ -3,8 +3,8 @@ import { searchSpotifyPlaylist } from "@/lib/spotify";
 
 /**
  * GET /api/spotify?q=query+string
- * 
- * Returns: { url: string }
+ *
+ * Returns: { url: string, playlistId: string, playlistName: string }
  */
 export async function GET(request: Request) {
   try {
@@ -18,10 +18,13 @@ export async function GET(request: Request) {
       );
     }
 
-    // Search Spotify for a matching playlist and get the embed URL
-    const embedUrl = await searchSpotifyPlaylist(query);
+    const result = await searchSpotifyPlaylist(query);
 
-    return NextResponse.json({ url: embedUrl });
+    return NextResponse.json({
+      url: result.embedUrl,
+      playlistId: result.playlistId,
+      playlistName: result.playlistName,
+    });
   } catch (error: unknown) {
     console.error("[API spotify] Handler error:", error);
     const message = error instanceof Error ? error.message : "Internal server error";

@@ -1,5 +1,17 @@
 "use client";
 
+import {
+  Coffee,
+  Leaf,
+  Heart,
+  Compass,
+  Clock,
+  Zap,
+  Cloud,
+  Gem,
+  type LucideIcon,
+} from "lucide-react";
+
 interface MoodChipsProps {
   onSelect: (mood: string) => void;
   disabled?: boolean;
@@ -12,7 +24,8 @@ interface MoodChip {
   hoverBg: string;
   text: string;
   ring: string;
-  icon: string;
+  icon: LucideIcon;
+  iconColor: string;
 }
 
 const MOODS: MoodChip[] = [
@@ -23,7 +36,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-amber-100 dark:hover:bg-amber-900",
     text: "text-amber-700 dark:text-amber-300",
     ring: "focus-visible:ring-amber-300",
-    icon: "☕",
+    icon: Coffee,
+    iconColor: "text-amber-600 dark:text-amber-400",
   },
   {
     label: "Refreshing",
@@ -32,7 +46,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-emerald-100 dark:hover:bg-emerald-900",
     text: "text-emerald-700 dark:text-emerald-300",
     ring: "focus-visible:ring-emerald-300",
-    icon: "🌿",
+    icon: Leaf,
+    iconColor: "text-emerald-600 dark:text-emerald-400",
   },
   {
     label: "Romantic",
@@ -41,7 +56,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-rose-100 dark:hover:bg-rose-900",
     text: "text-rose-700 dark:text-rose-300",
     ring: "focus-visible:ring-rose-300",
-    icon: "🕯",
+    icon: Heart,
+    iconColor: "text-rose-600 dark:text-rose-400",
   },
   {
     label: "Adventurous",
@@ -50,7 +66,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-orange-100 dark:hover:bg-orange-900",
     text: "text-orange-700 dark:text-orange-300",
     ring: "focus-visible:ring-orange-300",
-    icon: "🌍",
+    icon: Compass,
+    iconColor: "text-orange-600 dark:text-orange-400",
   },
   {
     label: "Nostalgic",
@@ -59,7 +76,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-violet-100 dark:hover:bg-violet-900",
     text: "text-violet-700 dark:text-violet-300",
     ring: "focus-visible:ring-violet-300",
-    icon: "📜",
+    icon: Clock,
+    iconColor: "text-violet-600 dark:text-violet-400",
   },
   {
     label: "Energetic",
@@ -68,7 +86,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-yellow-100 dark:hover:bg-yellow-900",
     text: "text-yellow-700 dark:text-yellow-300",
     ring: "focus-visible:ring-yellow-300",
-    icon: "⚡",
+    icon: Zap,
+    iconColor: "text-yellow-600 dark:text-yellow-400",
   },
   {
     label: "Calm",
@@ -77,7 +96,8 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-sky-100 dark:hover:bg-sky-900",
     text: "text-sky-700 dark:text-sky-300",
     ring: "focus-visible:ring-sky-300",
-    icon: "🍃",
+    icon: Cloud,
+    iconColor: "text-sky-600 dark:text-sky-400",
   },
   {
     label: "Indulgent",
@@ -86,37 +106,41 @@ const MOODS: MoodChip[] = [
     hoverBg: "hover:bg-fuchsia-100 dark:hover:bg-fuchsia-900",
     text: "text-fuchsia-700 dark:text-fuchsia-300",
     ring: "focus-visible:ring-fuchsia-300",
-    icon: "🍫",
+    icon: Gem,
+    iconColor: "text-fuchsia-600 dark:text-fuchsia-400",
   },
 ];
 
 export default function MoodChips({ onSelect, disabled = false }: MoodChipsProps) {
   return (
     <div className="flex flex-wrap justify-center gap-2.5 w-full max-w-xl mx-auto">
-      {MOODS.map((chip) => (
-        <button
-          key={chip.label}
-          type="button"
-          onClick={() => onSelect(chip.mood)}
-          disabled={disabled}
-          className={`
-            inline-flex items-center gap-1.5
-            rounded-full px-4 py-2
-            text-sm font-medium
-            cursor-pointer select-none
-            transition-all duration-200 ease-in-out
-            hover:-translate-y-0.5 hover:shadow-sm
-            active:scale-95
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
-            disabled:opacity-50 disabled:pointer-events-none
-            ${chip.bg} ${chip.hoverBg} ${chip.text} ${chip.ring}
-          `}
-          aria-label={`Select mood: ${chip.label}`}
-        >
-          <span aria-hidden="true" className="text-base leading-none">{chip.icon}</span>
-          {chip.label}
-        </button>
-      ))}
+      {MOODS.map((chip) => {
+        const Icon = chip.icon;
+        return (
+          <button
+            key={chip.label}
+            type="button"
+            onClick={() => onSelect(chip.mood)}
+            disabled={disabled}
+            className={`
+              inline-flex items-center gap-1.5
+              rounded-full px-4 py-2
+              text-sm font-medium
+              cursor-pointer select-none
+              transition-all duration-200 ease-in-out
+              hover:-translate-y-0.5 hover:shadow-sm
+              active:scale-95
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+              disabled:opacity-50 disabled:pointer-events-none
+              ${chip.bg} ${chip.hoverBg} ${chip.text} ${chip.ring}
+            `}
+            aria-label={`Select mood: ${chip.label}`}
+          >
+            <Icon aria-hidden="true" className={`w-4 h-4 ${chip.iconColor}`} />
+            {chip.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

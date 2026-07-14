@@ -1,18 +1,27 @@
 "use client";
 
+import {
+  UtensilsCrossed,
+  Music,
+  Wine,
+  Headphones,
+  CakeSlice,
+  Salad,
+} from "lucide-react";
+
 const FLOATING_ICONS = [
-  { emoji: "🍽", delay: "0ms", x: "15%", duration: "2.4s" },
-  { emoji: "🎵", delay: "400ms", x: "35%", duration: "2.8s" },
-  { emoji: "🍷", delay: "800ms", x: "55%", duration: "2.2s" },
-  { emoji: "🎶", delay: "1200ms", x: "75%", duration: "3s" },
-  { emoji: "🍰", delay: "600ms", x: "25%", duration: "2.6s" },
-  { emoji: "🎧", delay: "1000ms", x: "65%", duration: "2.5s" },
+  { Icon: Salad, delay: "0ms", x: "15%", duration: "2.4s" },
+  { Icon: Music, delay: "400ms", x: "35%", duration: "2.8s" },
+  { Icon: Wine, delay: "800ms", x: "55%", duration: "2.2s" },
+  { Icon: Headphones, delay: "1200ms", x: "75%", duration: "3s" },
+  { Icon: CakeSlice, delay: "600ms", x: "25%", duration: "2.6s" },
+  { Icon: UtensilsCrossed, delay: "1000ms", x: "65%", duration: "2.5s" },
 ];
 
 function SkeletonBone({ className }: { className?: string }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 ${className ?? ""}`}
+      className={`relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-stone-800 ${className ?? ""}`}
     >
       {/* Shimmer overlay */}
       <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent" />
@@ -36,7 +45,7 @@ function CourseCardSkeleton({ label, width }: { label: string; width: string }) 
       <SkeletonBone className="h-3.5 w-1/2" />
 
       {/* Label */}
-      <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 tracking-wide uppercase">
+      <span className="text-xs font-medium text-brand-400 dark:text-brand-500 tracking-wide uppercase">
         {label}
       </span>
     </div>
@@ -48,17 +57,17 @@ export default function LoadingState() {
     <div className="relative w-full max-w-3xl mx-auto py-8" role="status" aria-live="polite">
       {/* Floating food & music icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {FLOATING_ICONS.map((icon) => (
+        {FLOATING_ICONS.map(({ Icon, delay, x, duration }) => (
           <span
-            key={icon.emoji + icon.delay}
-            className="absolute text-xl opacity-0 animate-[float_3s_ease-in-out_infinite] select-none"
+            key={`${Icon.displayName || Icon.name}-${delay}`}
+            className="absolute text-zinc-300 dark:text-stone-500 opacity-0 animate-[float_3s_ease-in-out_infinite] select-none"
             style={{
-              left: icon.x,
-              animationDelay: icon.delay,
-              animationDuration: icon.duration,
+              left: x,
+              animationDelay: delay,
+              animationDuration: duration,
             }}
           >
-            {icon.emoji}
+            <Icon className="w-5 h-5" />
           </span>
         ))}
       </div>
@@ -70,7 +79,7 @@ export default function LoadingState() {
           <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-stone-500 animate-[dotPulse_1.4s_ease-in-out_200ms_infinite]" />
           <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-stone-500 animate-[dotPulse_1.4s_ease-in-out_400ms_infinite]" />
         </div>
-        <span className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+        <span className="text-sm text-zinc-500 dark:text-stone-400 font-medium">
           Crafting your perfect meal & playlist…
         </span>
       </div>
