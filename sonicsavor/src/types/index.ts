@@ -5,6 +5,7 @@ export interface MenuItem {
   course: "starter" | "main" | "dessert";
   moodDescription: string;
   tags: string[];
+  emoji: string;
 }
 
 export interface CourseRecommendation {

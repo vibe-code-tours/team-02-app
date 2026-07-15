@@ -8,11 +8,11 @@ import DatePicker from "@/components/ui/DatePicker";
 
 // Aligned with table-booking-system.md (22 tables total)
 const TABLE_TYPES = [
-  { key: "family", label: "Family", icon: "👨‍👩‍👧‍👦", capacity: "6-8 people", count: 5, minSize: 6, maxSize: 8 },
-  { key: "squad", label: "Squad", icon: "🧑‍🤝‍🧑", capacity: "4 people", count: 5, minSize: 3, maxSize: 4 },
-  { key: "duo", label: "Duo", icon: "💑", capacity: "2 people", count: 4, minSize: 2, maxSize: 2 },
-  { key: "single", label: "Single", icon: "🧑", capacity: "1 person", count: 4, minSize: 1, maxSize: 1 },
-  { key: "private", label: "Private", icon: "🔒", capacity: "2-6 people", count: 4, minSize: 2, maxSize: 6 },
+  { key: "family", label: "Family", capacity: "6-8 people", count: 5, minSize: 6, maxSize: 8 },
+  { key: "squad", label: "Squad", capacity: "4 people", count: 5, minSize: 3, maxSize: 4 },
+  { key: "duo", label: "Duo", capacity: "2 people", count: 4, minSize: 2, maxSize: 2 },
+  { key: "single", label: "Single", capacity: "1 person", count: 4, minSize: 1, maxSize: 1 },
+  { key: "private", label: "Private", capacity: "2-6 people", count: 4, minSize: 2, maxSize: 6 },
 ];
 
 const TIME_SLOTS = [
@@ -33,6 +33,43 @@ export default function BookingPage() {
   const availableTypes = TABLE_TYPES.filter(
     (t) => partySize >= t.minSize && partySize <= t.maxSize
   );
+
+  const getTableIcon = (key: string) => {
+    switch (key) {
+      case "family":
+        return (
+          <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+          </svg>
+        );
+      case "squad":
+        return (
+          <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+          </svg>
+        );
+      case "duo":
+        return (
+          <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        );
+      case "single":
+        return (
+          <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        );
+      case "private":
+        return (
+          <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+        );
+      default:
+        return null;
+    }
+  };
 
   const handleBooking = () => {
     // TODO: Call API to create booking
@@ -109,7 +146,7 @@ export default function BookingPage() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{type.icon}</span>
+                      {getTableIcon(type.key)}
                       <div className="flex-1">
                         <div className="font-semibold text-[#F5F3F0]">{type.label}</div>
                         <div className="text-xs text-[#A7A4B8]">{type.capacity}</div>

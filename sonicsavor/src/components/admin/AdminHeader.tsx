@@ -10,7 +10,9 @@ export default function AdminHeader({ staffName, onLogout }: AdminHeaderProps) {
     <header className="bg-[#1A1926] border-b border-[#242334] px-4 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🎵</span>
+          <svg className="w-8 h-8 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
           <div>
             <h1 className="text-lg font-semibold text-[#F5F3F0]">SonicSavor</h1>
             <p className="text-xs text-[#A7A4B8]">Staff Panel</p>

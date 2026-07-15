@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 interface Session {
   sessionToken: string;
   tableId: string;
@@ -21,6 +23,12 @@ export default function ActiveSessions({
   sessions,
   onRevoke,
 }: ActiveSessionsProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const activeSessions = sessions.filter((s) => s.status === "active");
 
   return (
@@ -36,7 +44,9 @@ export default function ActiveSessions({
 
       {activeSessions.length === 0 ? (
         <div className="text-center py-8">
-          <span className="text-4xl">🔒</span>
+          <svg className="w-12 h-12 text-[#242334] mx-auto" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
           <p className="text-[#A7A4B8] mt-2">No active sessions</p>
         </div>
       ) : (
@@ -48,7 +58,9 @@ export default function ActiveSessions({
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-[#242334] rounded-lg flex items-center justify-center">
-                  <span className="text-lg">🔒</span>
+                  <svg className="w-5 h-5 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                  </svg>
                 </div>
                 <div>
                   <div className="font-medium text-[#F5F3F0]">
@@ -66,7 +78,7 @@ export default function ActiveSessions({
                     ${session.totalSpent.toFixed(2)}
                   </div>
                   <div className="text-xs text-[#A7A4B8]">
-                    {new Date(session.startedAt).toLocaleTimeString()}
+                    {mounted ? new Date(session.startedAt).toLocaleTimeString() : "--:--:--"}
                   </div>
                 </div>
                 <button

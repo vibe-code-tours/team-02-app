@@ -51,15 +51,17 @@ export default function CheckinPage() {
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="flex justify-center mb-4">
-              <svg className="w-16 h-16 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-              </svg>
+              <div className="w-20 h-20 bg-[#E85D04]/10 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-[#E85D04]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+              </div>
             </div>
             <h1 className="text-3xl font-bold text-[#F5F3F0]">
               Welcome to SonicSavor
             </h1>
             <p className="text-[#A7A4B8]">
-              Enter your 6-digit access code from our staff to continue
+              Enter your 6-digit access code from our staff to start your dining experience
             </p>
           </div>
 
@@ -71,6 +73,36 @@ export default function CheckinPage() {
               isLoading={isLoading}
               error={error}
             />
+          </div>
+
+          {/* How it works */}
+          <div className="bg-[#1A1926]/50 border border-[#242334] rounded-xl p-6">
+            <h3 className="text-sm font-semibold text-[#F5F3F0] mb-3">How to get your code:</h3>
+            <ol className="space-y-2 text-sm text-[#A7A4B8]">
+              <li className="flex items-start gap-2">
+                <span className="text-[#E85D04] font-semibold">1.</span>
+                <span>Visit our restaurant or call ahead</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#E85D04] font-semibold">2.</span>
+                <span>Our staff will generate a code for you</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#E85D04] font-semibold">3.</span>
+                <span>Enter the code above to access your session</span>
+              </li>
+            </ol>
+          </div>
+
+          {/* Don't have a code? */}
+          <div className="text-center">
+            <p className="text-[#A7A4B8] text-sm mb-2">Don&apos;t have a code?</p>
+            <button
+              onClick={() => router.push("/register")}
+              className="text-[#E85D04] hover:text-[#E85D04]/80 transition-colors duration-200 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#E85D04] rounded-lg px-4 py-2 min-h-[44px]"
+            >
+              Create an account instead
+            </button>
           </div>
 
           {/* Back to Home */}

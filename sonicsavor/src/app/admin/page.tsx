@@ -7,6 +7,7 @@ import OTPDisplay from "@/components/admin/OTPDisplay";
 import BookingList from "@/components/admin/BookingList";
 import ActiveSessions from "@/components/admin/ActiveSessions";
 import WalkInForm from "@/components/admin/WalkInForm";
+import TableMap from "@/components/admin/TableMap";
 
 // Mock data for demo
 const MOCK_BOOKINGS = [
@@ -57,6 +58,7 @@ type ModalView = "none" | "generate-otp" | "check-in";
 
 export default function AdminPage() {
   const [modalView, setModalView] = useState<ModalView>("none");
+  const [showTableMap, setShowTableMap] = useState(false);
   const [generatedOTP, setGeneratedOTP] = useState<{
     code: string;
     guestName: string;
@@ -105,6 +107,10 @@ export default function AdminPage() {
     }
   };
 
+  const handleShowTableMap = () => {
+    setShowTableMap(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#0F0E17]">
       {/* Header */}
@@ -116,6 +122,7 @@ export default function AdminPage() {
         <QuickActions
           onGenerateOTP={handleGenerateOTP}
           onCheckIn={handleCheckIn}
+          onShowTableMap={handleShowTableMap}
         />
 
         {/* OTP Display (when generated) */}
@@ -131,7 +138,7 @@ export default function AdminPage() {
         )}
 
         {/* Walk-in Form (when modal is open) */}
-        {modalView === "generate-otp" && (
+        {(modalView === "generate-otp" || modalView === "check-in") && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="w-full max-w-md">
               <WalkInForm
@@ -163,6 +170,11 @@ export default function AdminPage() {
           />
         </div>
       </main>
+
+      {/* Table Map Modal */}
+      {showTableMap && (
+        <TableMap onClose={() => setShowTableMap(false)} />
+      )}
     </div>
   );
 }
