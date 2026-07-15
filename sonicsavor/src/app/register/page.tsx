@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import EmailInput from "@/components/landing/EmailInput";
-import AccessCodeEntry from "@/components/landing/AccessCodeEntry";
+import OTPInput from "@/components/landing/OTPInput";
 
 type ViewMode = "email" | "otp";
 
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      // TODO: Call API to send OTP
+      // TODO: Call API to send OTP to email
       console.log("Sending OTP to:", submittedEmail);
 
       // Simulate API call
@@ -35,23 +35,23 @@ export default function RegisterPage() {
     }
   };
 
-  const handleOtpSubmit = async (code: string) => {
+  const handleOtpSubmit = async (otp: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
       // TODO: Call API to verify OTP and create account
-      console.log("Verifying OTP:", code);
+      console.log("Verifying OTP:", otp);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // For demo: any 6-digit code works
-      if (code.length === 6) {
+      if (otp.length === 6) {
         // Store session and redirect to dashboard
         localStorage.setItem("sonicsavor_session", JSON.stringify({
           email,
-          code,
+          otp,
           loginTime: new Date().toISOString(),
           expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days for registered users
         }));
@@ -115,7 +115,7 @@ export default function RegisterPage() {
               </button>
 
               {/* OTP Input */}
-              <AccessCodeEntry
+              <OTPInput
                 onSubmit={handleOtpSubmit}
                 disabled={isLoading}
                 isLoading={isLoading}
