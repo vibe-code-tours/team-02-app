@@ -64,3 +64,4 @@ Thumbs.db
 # Local developer notes (not pushed to GitHub)
 *.local.md
 local-notes/
+.local-notes/
