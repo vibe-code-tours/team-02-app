@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicSavor — Backend API Specification v2.0</title>
+    <style>
+        :root {
+            --primary: #E85D04;
+            --secondary: #FFB703;
+            --accent: #9D4EDD;
+            --bg: #0F0E17;
+            --surface: #1A1926;
+            --surface-elevated: #242334;
+            --text-primary: #F5F3F0;
+            --text-secondary: #A7A4B8;
+            --success: #2EC4B6;
+            --error: #E63946;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .version {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--surface-elevated);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .endpoint {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+        }
+
+        .method.post { background: var(--success); color: var(--bg); }
+        .method.get { background: var(--accent); color: white; }
+
+        .path {
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        pre {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--surface-elevated);
+        }
+
+        code {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .note {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .important {
+            background: rgba(232, 93, 4, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-elevated);
+        }
+
+        th {
+            background: var(--surface);
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: var(--surface);
+        }
+
+        .flow-diagram {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: var(--surface-elevated);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 0.25rem;
+            border: 1px solid var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            margin: 0 0.25rem;
+        }
+
+        .flow-section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+
+        .flow-section h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 SonicSavor</h1>
+            <p class="subtitle">Backend API Specification</p>
+            <span class="version">v2.0 — Staff-Generated OTP</span>
+        </header>
+
+        <section>
+            <h2>📋 Overview</h2>
+            <p>SonicSavor is a restaurant web app with:</p>
+            <ul>
+                <li><strong>Staff-generated OTP authentication</strong> (no email required)</li>
+                <li><strong>Admin panel</strong> for staff to manage bookings and generate OTPs</li>
+                <li><strong>Table booking system</strong> (22 tables, 5 types)</li>
+                <li><strong>Menu ordering</strong> with mood-based recommendations</li>
+                <li><strong>Session management</strong> (4-hour guest sessions)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🔄 Authentication Flow (Updated)</h2>
+
+            <div class="important">
+                <strong>Key Change:</strong> Staff generates OTP, NOT email-based. Customer receives code from staff (on screen).
+            </div>
+
+            <div class="flow-diagram">
+                <div class="flow-section">
+                    <h4>🚶 Walk-in Customer</h4>
+                    <span class="flow-step">Customer arrives</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Staff generates OTP</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Staff shows code on screen</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Customer enters code</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Access granted</span>
+                </div>
+
+                <div class="flow-section">
+                    <h4>📅 Online Booking</h4>
+                    <span class="flow-step">Customer booked online</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Staff clicks Check In</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">System generates OTP</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Staff shows code</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Customer enters code</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>👨‍💼 1. Admin Panel API (Staff)</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/admin/generate-otp</span></h3>
+                <p><strong>Purpose:</strong> Staff generates OTP for walk-in customer</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "tableType": "private",
+  "partySize": 4,
+  "guestName": "Walk-in Guest"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "otp": {
+    "code": "472891",
+    "tableId": "P2",
+    "tableType": "private",
+    "expiresAt": "2026-07-14T18:00:00Z"
+  },
+  "message": "Show this code to customer"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/admin/check-in</span></h3>
+                <p><strong>Purpose:</strong> Check in online booking and generate OTP</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "bookingId": "BK-20260714-P1"
+}</code></pre>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "success": true,
+  "otp": {
+    "code": "839201",
+    "tableId": "P1",
+    "booking": {
+      "guestName": "Sarah Chen",
+      "partySize": 4,
+      "occasion": "date_night"
+    }
+  }
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/admin/bookings</span></h3>
+                <p><strong>Purpose:</strong> View today's bookings</p>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "date": "2026-07-14",
+  "bookings": [
+    {
+      "id": "BK-20260714-P1",
+      "time": "19:00",
+      "tableType": "private",
+      "guestName": "Sarah Chen",
+      "status": "reserved"
+    }
+  ]
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/admin/sessions</span></h3>
+                <p><strong>Purpose:</strong> View active sessions</p>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "sessions": [
+    {
+      "sessionToken": "abc123xyz",
+      "tableId": "P2",
+      "guestName": "Walk-in Guest",
+      "otpCode": "472891",
+      "status": "active"
+    }
+  ],
+  "activeCount": 2
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/admin/revoke</span></h3>
+                <p><strong>Purpose:</strong> Revoke a session</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "sessionToken": "abc123xyz",
+  "reason": "Customer left"
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🔐 2. Customer Authentication</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/verify-otp</span></h3>
+                <p><strong>Purpose:</strong> Customer enters OTP code from staff</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "code": "472891"
+}</code></pre>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "success": true,
+  "sessionToken": "abc123xyz",
+  "session": {
+    "tableId": "P2",
+    "tableType": "private",
+    "guestName": "Walk-in Guest",
+    "expiresAt": "2026-07-14T21:00:00Z"
+  }
+}</code></pre>
+
+                <div class="note">
+                    <strong>Note:</strong> No email required. Just enter the code staff gave you.
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/auth/session</span></h3>
+                <p><strong>Purpose:</strong> Check current session</p>
+
+                <p><strong>Response (200):</strong></p>
+                <pre><code>{
+  "authenticated": true,
+  "session": {
+    "tableId": "P2",
+    "tableType": "private",
+    "guestName": "Sarah Chen",
+    "preferences": {
+      "occasion": "date_night",
+      "dietaryRestrictions": ["vegetarian"]
+    }
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>📅 3. Online Booking (Customer)</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/bookings</span></h3>
+                <p><strong>Purpose:</strong> Customer books table online</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "tableType": "private",
+  "date": "2026-07-14",
+  "time": "19:00",
+  "partySize": 4,
+  "guestName": "Sarah Chen",
+  "guestEmail": "sarah@example.com",
+  "occasion": "date_night",
+  "specialRequests": "Anniversary dinner"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "booking": {
+    "id": "BK-20260714-P1",
+    "confirmationCode": "SONIC-7X9K2M",
+    "status": "confirmed",
+    "message": "Show this code when you arrive!"
+  }
+}</code></pre>
+
+                <div class="note">
+                    <strong>Note:</strong> Email is required for booking confirmation. Confirmation sent via Resend.
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>🪑 4. Table Configuration</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Count</th>
+                        <th>Capacity</th>
+                        <th>Focus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Family</td><td>5</td><td>6-8 people</td><td>No</td></tr>
+                    <tr><td>Squad</td><td>5</td><td>4 people</td><td>No</td></tr>
+                    <tr><td>Duo</td><td>4</td><td>2 people</td><td>No</td></tr>
+                    <tr><td>Single</td><td>4</td><td>1 person</td><td>No</td></tr>
+                    <tr><td>Private</td><td>4</td><td>2-6 people</td><td><strong>YES</strong></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>🍽️ 5. Menu & Orders</h2>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/menu</span></h3>
+                <p><strong>Purpose:</strong> Get menu with categories and items</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/orders</span></h3>
+                <p><strong>Purpose:</strong> Place order (requires session)</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> <span class="path">/api/orders/:id</span></h3>
+                <p><strong>Purpose:</strong> Check order status</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>⭐ 6. Feedback & Registration</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/feedback</span></h3>
+                <p><strong>Purpose:</strong> Submit feedback after dining</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> <span class="path">/api/auth/register</span></h3>
+                <p><strong>Purpose:</strong> Upgrade to registered user (email-based registration)</p>
+
+                <p><strong>Request:</strong></p>
+                <pre><code>{
+  "email": "sarah@example.com",
+  "name": "Sarah Chen"
+}</code></pre>
+
+                <p><strong>Response (201):</strong></p>
+                <pre><code>{
+  "success": true,
+  "user": {
+    "id": "USR-001",
+    "email": "sarah@example.com",
+    "name": "Sarah Chen",
+    "isRegistered": true
+  },
+  "benefits": [
+    "Order history saved",
+    "Favorite dishes tracked",
+    "Faster checkout next time",
+    "Rewards points: +100"
+  ]
+}</code></pre>
+
+                <div class="note">
+                    <strong>Note:</strong> Registration uses email (standard web flow). Welcome email sent via Resend.
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>💻 Data Models</h2>
+
+            <pre><code>// OTP Record
+interface OTPRecord {
+  id: string;
+  code: string;
+  tableId: string;
+  sessionToken: string;
+  guestName: string;
+  guestEmail?: string;
+  bookingId?: string; // null for walk-ins
+  createdAt: Date;
+  expiresAt: Date;
+  used: boolean;
+  generatedBy: string; // admin staff ID
+}
+
+// Session
+interface Session {
+  token: string;
+  tableId: string;
+  tableType: string;
+  guestName: string;
+  bookingId?: string;
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+// Booking
+interface Booking {
+  id: string;
+  confirmationCode: string;
+  tableType: string;
+  date: string;
+  time: string;
+  partySize: number;
+  status: "confirmed" | "checked-in" | "completed" | "cancelled";
+  guestName: string;
+  guestEmail: string;
+  occasion?: string;
+  specialRequests?: string;
+}</code></pre>
+        </section>
+
+        <footer>
+            <p>🎵 SonicSavor — Backend API Specification v2.0</p>
+            <p>Staff-Generated OTP Flow</p>
+            <p>Questions? Contact the frontend team.</p>
+        </footer>
+    </div>
+</body>
+</html>
