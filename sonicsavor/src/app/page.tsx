@@ -9,7 +9,7 @@ import SpotifyEmbed from "@/components/ui/SpotifyEmbed";
 import GuestRegistrationForm from "@/components/guest/GuestRegistrationForm";
 import CustomerFeedbackForm from "@/components/feedback/CustomerFeedbackForm";
 import AccessCodeForm from "@/components/auth/AccessCodeForm";
-import type { Recommendation, GuestRegistration } from "@/types";
+import type { Recommendation, GuestRegistration, CustomerFeedback } from "@/types";
 
 // ── Page ───────────────────────────────────────────────────
 
@@ -77,14 +77,44 @@ export default function Home() {
     }
   };
 
-  const handleGuestSubmit = (data: GuestRegistration) => {
-    console.log("Guest registration:", data);
-    alert(`Registration received for ${data.name} (${data.partySize} guests)`);
+  const handleGuestSubmit = async (data: GuestRegistration) => {
+    try {
+      const res = await fetch("/api/guest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to submit registration");
+      }
+
+      alert(`Registration received for ${data.name} (${data.partySize} guests)`);
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Something went wrong");
+    }
   };
 
-  const handleFeedbackSubmit = (data: unknown) => {
-    console.log("Feedback:", data);
-    alert("Thank you for your feedback!");
+  const handleFeedbackSubmit = async (data: CustomerFeedback) => {
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to submit feedback");
+      }
+
+      alert("Thank you for your feedback!");
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Something went wrong");
+    }
   };
 
   const handleLogout = async () => {
