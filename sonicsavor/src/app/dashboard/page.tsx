@@ -1,40 +1,53 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import QuickAccessCards from "@/components/dashboard/QuickAccessCards";
 import TableAvailabilityWidget from "@/components/dashboard/TableAvailabilityWidget";
 
-// Mock data for demo
+// Mock data aligned with table-booking-system.md (22 tables total)
 const MOCK_AVAILABILITY = {
-  family: { total: 5, available: 3 },
-  squad: { total: 5, available: 4 },
-  duo: { total: 4, available: 2 },
-  single: { total: 4, available: 4 },
-  private: { total: 4, available: 1 },
+  family: { total: 5, available: 3 },   // 6-8 people
+  squad: { total: 5, available: 4 },    // 4 people
+  duo: { total: 4, available: 2 },      // 2 people
+  single: { total: 4, available: 4 },   // 1 person
+  private: { total: 4, available: 1 },  // 2-6 people (priority)
 };
 
+// Mood chips for quick access
+const MOOD_CHIPS = [
+  { label: "Cozy", icon: "☕" },
+  { label: "Energetic", icon: "⚡" },
+  { label: "Romantic", icon: "💜" },
+  { label: "Chill", icon: "😌" },
+  { label: "Nostalgic", icon: "🕰️" },
+  { label: "Adventurous", icon: "🌍" },
+];
+
 export default function DashboardPage() {
+  const router = useRouter();
   const [guestName] = useState("Sarah Chen");
   const [tableInfo] = useState("Private Table 2");
   const [timeRemaining] = useState(180); // 3 hours
 
   const handleNavigate = (page: "booking" | "menu") => {
-    // TODO: Use Next.js router for navigation
-    console.log("Navigating to:", page);
-    window.location.href = `/${page}`;
+    router.push(`/${page}`);
   };
 
   const handleSelectType = (type: string) => {
-    console.log("Selected table type:", type);
-    // TODO: Navigate to booking page with table type pre-selected
-    window.location.href = `/booking?type=${type}`;
+    router.push(`/booking?type=${type}`);
+  };
+
+  const handleMoodClick = (mood: string) => {
+    // Navigate to menu with mood filter
+    router.push(`/menu?mood=${mood.toLowerCase()}`);
   };
 
   const handleLogout = () => {
-    // TODO: Call API to logout
-    console.log("Logging out...");
-    window.location.href = "/";
+    // Clear session and redirect
+    localStorage.removeItem("sonicsavor_session");
+    router.push("/");
   };
 
   return (
@@ -82,12 +95,14 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {["Cozy", "Energetic", "Romantic", "Chill", "Nostalgic"].map((mood) => (
+            {MOOD_CHIPS.map((mood) => (
               <button
-                key={mood}
-                className="px-4 py-2 bg-[#0F0E17] hover:bg-[#242334] text-[#A7A4B8] hover:text-[#F5F3F0] rounded-full text-sm transition-colors"
+                key={mood.label}
+                onClick={() => handleMoodClick(mood.label)}
+                className="px-4 py-2 bg-[#0F0E17] hover:bg-[#E85D04] text-[#A7A4B8] hover:text-[#F5F3F0] rounded-full text-sm transition-all flex items-center gap-2"
               >
-                {mood}
+                <span>{mood.icon}</span>
+                <span>{mood.label}</span>
               </button>
             ))}
           </div>

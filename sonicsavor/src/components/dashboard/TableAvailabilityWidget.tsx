@@ -13,12 +13,13 @@ interface TableAvailabilityWidgetProps {
   onSelectType: (type: string) => void;
 }
 
+// Aligned with table-booking-system.md (22 tables total)
 const TABLE_TYPES = [
-  { key: "family", label: "Family", icon: "👨‍👩‍👧‍👦", capacity: "6-8" },
-  { key: "squad", label: "Squad", icon: "🧑‍🤝‍🧑", capacity: "4" },
-  { key: "duo", label: "Duo", icon: "💑", capacity: "2" },
-  { key: "single", label: "Single", icon: "🧑", capacity: "1" },
-  { key: "private", label: "Private", icon: "🔒", capacity: "2-6" },
+  { key: "family", label: "Family", icon: "👨‍👩‍👧‍👦", capacity: "6-8 people", count: 5 },
+  { key: "squad", label: "Squad", icon: "🧑‍🤝‍🧑", capacity: "4 people", count: 5 },
+  { key: "duo", label: "Duo", icon: "💑", capacity: "2 people", count: 4 },
+  { key: "single", label: "Single", icon: "🧑", capacity: "1 person", count: 4 },
+  { key: "private", label: "Private", icon: "🔒", capacity: "2-6 people", count: 4 },
 ];
 
 export default function TableAvailabilityWidget({
