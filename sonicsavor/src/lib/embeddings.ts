@@ -1,65 +1,79 @@
+import { pipeline } from "@xenova/transformers";
 import { MenuItem } from "@/types";
-import { MENU_ITEMS } from "./menu-data";
+import { searchByEmbedding } from "./menu-queries";
+
+// ── Globals ────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let extractor: any;
+let initialized = false;
+
+// ── Init ───────────────────────────────────────────────────
 
 /**
- * Interface representing a menu item with its calculated similarity score.
- */
-export interface ScoredMenuItem extends MenuItem {
-  score: number;
-}
-
-/**
- * Initializes the embedding model.
- * In a real implementation, this will load the model (e.g. Xenova/all-MiniLM-L6-v2) 
- * and generate embeddings for all static menu items.
+ * Loads the embedding model. Safe to call multiple times — only runs once.
  */
 export async function initEmbeddings(): Promise<void> {
-  console.log("[Embeddings] Initializing model & generating menu item embeddings...");
-  // TODO: Team member to implement Xenova Transformers pipeline loading
-  // e.g. pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
+  if (initialized) return;
+
+  console.log("[Embeddings] Loading Xenova/all-MiniLM-L6-v2...");
+  extractor = await pipeline(
+    "feature-extraction",
+    "Xenova/all-MiniLM-L6-v2"
+  );
+  initialized = true;
+  console.log("[Embeddings] Model loaded.");
+}
+
+// ── Embed text ─────────────────────────────────────────────
+
+/**
+ * Generate a 384-dim embedding vector for a single text string.
+ */
+export async function embedText(text: string): Promise<number[]> {
+  await initEmbeddings();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const output: any = await extractor(text, {
+    pooling: "mean",
+    normalize: true,
+  });
+  return (output.tolist() as number[][])[0];
 }
 
 /**
- * Performs a semantic vector search on the menu items based on a user's mood query.
- * 
- * @param query The user's input mood string (e.g., "I am feeling exhausted")
- * @param limit The maximum number of recommendations to return (defaults to 3)
- * @returns A promise resolving to an array of matching menu items.
+ * Generate embeddings for multiple texts in a batch.
  */
-export async function searchByMood(query: string, limit: number = 3): Promise<MenuItem[]> {
-  console.log(`[Embeddings] Searching menu for mood: "${query}" (limit: ${limit})`);
-  
-  // SKELETON MOCK: Simple keyword matching on tag fields to act as a fallback/stub.
-  // Team member will replace this with real cosine similarity score calculations over generated embeddings.
-  const normalizedQuery = query.toLowerCase();
-  
-  const scoredItems: ScoredMenuItem[] = MENU_ITEMS.map((item) => {
-    let score = 0;
-    
-    // Check tags
-    item.tags.forEach((tag) => {
-      if (normalizedQuery.includes(tag.toLowerCase())) {
-        score += 2;
-      }
-    });
+export async function embedTexts(texts: string[]): Promise<number[][]> {
+  await initEmbeddings();
 
-    // Check description
-    if (item.moodDescription.toLowerCase().includes(normalizedQuery)) {
-      score += 1;
-    }
-    
-    // Default score decay
-    return { ...item, score };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const output: any = await extractor(texts, {
+    pooling: "mean",
+    normalize: true,
   });
+  return output.tolist() as number[][];
+}
 
-  // Sort descending by score, and select top items
-  const sorted = scoredItems
-    .filter(item => item.score > 0)
-    .sort((a, b) => b.score - a.score);
+// ── Search ─────────────────────────────────────────────────
 
-  const results = sorted.length > 0
-    ? sorted.map(({ score: _score, ...item }) => item)
-    : MENU_ITEMS.slice(0, limit); // fallback to first few items if no matches
+/**
+ * Semantic search over menu items by mood query.
+ * Embeds the query locally, then sends the vector to Supabase for cosine similarity search.
+ */
+export async function searchByMood(
+  query: string,
+  limit: number = 3
+): Promise<MenuItem[]> {
+  console.log(`[Embeddings] Searching for: "${query}" (limit: ${limit})`);
 
-  return results.slice(0, limit);
+  const queryEmbedding = await embedText(query);
+  const results = await searchByEmbedding(queryEmbedding, limit);
+
+  console.log(
+    `[Embeddings] Results:`,
+    results.map((r) => r.name)
+  );
+
+  return results;
 }
