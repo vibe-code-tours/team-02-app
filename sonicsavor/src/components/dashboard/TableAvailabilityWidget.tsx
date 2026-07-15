@@ -7,10 +7,59 @@ interface TableAvailabilityWidgetProps {
   onSelectType: (type: string) => void;
 }
 
+// Generate date options
+const getDateOptions = () => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const thisWeekend = new Date(today);
+  thisWeekend.setDate(today.getDate() + (6 - today.getDay())); // Saturday
+
+  const nextWeek = new Date(today);
+  nextWeek.setDate(today.getDate() + 7);
+
+  const nextWeekend = new Date(today);
+  nextWeekend.setDate(today.getDate() + (13 - today.getDay())); // Next Saturday
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split("T")[0];
+  };
+
+  const formatDisplay = (date: Date, label: string) => {
+    const day = date.toLocaleDateString("en-US", { weekday: "short" });
+    const month = date.toLocaleDateString("en-US", { month: "short" });
+    const dayNum = date.getDate();
+    return `${label} (${day}, ${month} ${dayNum})`;
+  };
+
+  return [
+    { value: formatDate(today), label: formatDisplay(today, "Today") },
+    { value: formatDate(tomorrow), label: formatDisplay(tomorrow, "Tomorrow") },
+    { value: formatDate(thisWeekend), label: formatDisplay(thisWeekend, "This Weekend") },
+    { value: formatDate(nextWeek), label: formatDisplay(nextWeek, "Next Week") },
+    { value: formatDate(nextWeekend), label: formatDisplay(nextWeekend, "Next Weekend") },
+  ];
+};
+
+const TIME_SLOTS = [
+  { value: "17:00", label: "5:00 PM" },
+  { value: "17:30", label: "5:30 PM" },
+  { value: "18:00", label: "6:00 PM" },
+  { value: "18:30", label: "6:30 PM" },
+  { value: "19:00", label: "7:00 PM" },
+  { value: "19:30", label: "7:30 PM" },
+  { value: "20:00", label: "8:00 PM" },
+  { value: "20:30", label: "8:30 PM" },
+  { value: "21:00", label: "9:00 PM" },
+];
+
 export default function TableAvailabilityWidget({ onSelectType }: TableAvailabilityWidgetProps) {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [selectedTime, setSelectedTime] = useState("19:00");
   const [availability, setAvailability] = useState<{ [key: string]: { total: number; available: number } }>({});
+
+  const dateOptions = getDateOptions();
 
   useEffect(() => {
     const avail = getTableAvailability(selectedDate, selectedTime);
@@ -41,26 +90,30 @@ export default function TableAvailabilityWidget({ onSelectType }: TableAvailabil
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block text-xs text-[#A7A4B8] mb-1">Date</label>
-          <input
-            type="date"
+          <select
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            min={new Date().toISOString().split("T")[0]}
-            className="w-full px-3 py-2 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] text-sm focus:border-[#E85D04] outline-none"
-          />
+            className="w-full px-3 py-2 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] text-sm focus:border-[#E85D04] outline-none cursor-pointer"
+          >
+            {dateOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block text-xs text-[#A7A4B8] mb-1">Time</label>
           <select
             value={selectedTime}
             onChange={(e) => setSelectedTime(e.target.value)}
-            className="w-full px-3 py-2 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] text-sm focus:border-[#E85D04] outline-none"
+            className="w-full px-3 py-2 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] text-sm focus:border-[#E85D04] outline-none cursor-pointer"
           >
-            <option value="17:00">5:00 PM</option>
-            <option value="18:00">6:00 PM</option>
-            <option value="19:00">7:00 PM</option>
-            <option value="20:00">8:00 PM</option>
-            <option value="21:00">9:00 PM</option>
+            {TIME_SLOTS.map((slot) => (
+              <option key={slot.value} value={slot.value}>
+                {slot.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
