@@ -344,16 +344,24 @@ export default function Home() {
             <p className="text-[#A7A4B8] text-sm mb-4">
               Ready to find your perfect meal + playlist?
             </p>
-            <a
-              href="#"
-              className="inline-block px-8 py-3 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-semibold rounded-xl transition-colors duration-200"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              Get Started Free
-            </a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="#"
+                className="inline-block px-8 py-3 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-semibold rounded-xl transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                Get Started Free
+              </a>
+              <a
+                href="/booking"
+                className="inline-block px-8 py-3 bg-[#242334] hover:bg-[#242334]/80 text-[#F5F3F0] font-semibold rounded-xl transition-colors duration-200 border border-[#242334]"
+              >
+                Reserve Table
+              </a>
+            </div>
           </div>
         </div>
       </section>

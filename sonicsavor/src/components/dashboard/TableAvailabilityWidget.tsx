@@ -25,8 +25,6 @@ export default function TableAvailabilityWidget({ onSelectType }: TableAvailabil
   const [selectedTime, setSelectedTime] = useState("19:00");
   const [availability, setAvailability] = useState<{ [key: string]: { total: number; available: number } }>({});
 
-  const dateOptions = getDateOptions();
-
   useEffect(() => {
     const avail = getTableAvailability(selectedDate, selectedTime);
     setAvailability(avail);

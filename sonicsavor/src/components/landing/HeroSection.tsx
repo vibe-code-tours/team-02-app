@@ -94,6 +94,16 @@ export default function HeroSection({ children }: HeroSectionProps) {
 
         {/* Children (Form goes here) */}
         {children}
+
+        {/* Secondary CTA - Reserve Table */}
+        <div className="mt-6">
+          <a
+            href="/booking"
+            className="inline-block px-6 py-3 bg-[#242334] hover:bg-[#242334]/80 text-[#F5F3F0] font-medium rounded-xl transition-all duration-200 border border-[#242334] hover:border-[#E85D04]/50"
+          >
+            Reserve Table →
+          </a>
+        </div>
       </div>
     </section>
   );
