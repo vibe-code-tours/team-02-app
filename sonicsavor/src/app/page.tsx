@@ -186,6 +186,64 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Explore Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-[#F5F3F0] text-center mb-4">
+            Explore SonicSavor
+          </h2>
+          <p className="text-[#A7A4B8] text-center mb-12">
+            Browse our menu or reserve your table
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {/* Menu Card */}
+            <div
+              onClick={() => router.push("/menu")}
+              className="bg-[#1A1926] border border-[#242334] rounded-xl p-8 cursor-pointer hover:border-[#E85D04] transition-all group"
+            >
+              <span className="text-4xl mb-4 block">🍽️</span>
+              <h3 className="text-2xl font-bold text-[#F5F3F0] mb-3 group-hover:text-[#E85D04] transition-colors">
+                Menu
+              </h3>
+              <p className="text-[#A7A4B8] mb-4">
+                Explore our diverse selection of Myanmar, Western, and European cuisines
+              </p>
+              <ul className="text-sm text-[#A7A4B8] space-y-2 mb-6">
+                <li>• 18 dishes across 3 courses</li>
+                <li>• Starters, Mains, and Desserts</li>
+                <li>• Mood-based descriptions</li>
+              </ul>
+              <span className="text-[#E85D04] font-medium text-sm group-hover:translate-x-2 inline-block transition-transform">
+                Browse Menu →
+              </span>
+            </div>
+
+            {/* Booking Card */}
+            <div
+              onClick={() => router.push("/booking")}
+              className="bg-[#1A1926] border border-[#242334] rounded-xl p-8 cursor-pointer hover:border-[#9D4EDD] transition-all group"
+            >
+              <span className="text-4xl mb-4 block">📅</span>
+              <h3 className="text-2xl font-bold text-[#F5F3F0] mb-3 group-hover:text-[#9D4EDD] transition-colors">
+                Book a Table
+              </h3>
+              <p className="text-[#A7A4B8] mb-4">
+                Reserve your perfect table for a mood-driven dining experience
+              </p>
+              <ul className="text-sm text-[#A7A4B8] space-y-2 mb-6">
+                <li>• 22 tables across 5 types</li>
+                <li>• Family, Squad, Duo, Solo, Private</li>
+                <li>• Real-time availability</li>
+              </ul>
+              <span className="text-[#9D4EDD] font-medium text-sm group-hover:translate-x-2 inline-block transition-transform">
+                Reserve Table →
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA Section */}
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
