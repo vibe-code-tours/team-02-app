@@ -2,45 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { TABLE_CONFIG, getTableAvailability } from "@/lib/table-availability";
+import CalendarPopup from "@/components/ui/CalendarPopup";
 
 interface TableAvailabilityWidgetProps {
   onSelectType: (type: string) => void;
 }
-
-// Generate date options
-const getDateOptions = () => {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const thisWeekend = new Date(today);
-  thisWeekend.setDate(today.getDate() + (6 - today.getDay())); // Saturday
-
-  const nextWeek = new Date(today);
-  nextWeek.setDate(today.getDate() + 7);
-
-  const nextWeekend = new Date(today);
-  nextWeekend.setDate(today.getDate() + (13 - today.getDay())); // Next Saturday
-
-  const formatDate = (date: Date) => {
-    return date.toISOString().split("T")[0];
-  };
-
-  const formatDisplay = (date: Date, label: string) => {
-    const day = date.toLocaleDateString("en-US", { weekday: "short" });
-    const month = date.toLocaleDateString("en-US", { month: "short" });
-    const dayNum = date.getDate();
-    return `${label} (${day}, ${month} ${dayNum})`;
-  };
-
-  return [
-    { value: formatDate(today), label: formatDisplay(today, "Today") },
-    { value: formatDate(tomorrow), label: formatDisplay(tomorrow, "Tomorrow") },
-    { value: formatDate(thisWeekend), label: formatDisplay(thisWeekend, "This Weekend") },
-    { value: formatDate(nextWeek), label: formatDisplay(nextWeek, "Next Week") },
-    { value: formatDate(nextWeekend), label: formatDisplay(nextWeekend, "Next Weekend") },
-  ];
-};
 
 const TIME_SLOTS = [
   { value: "17:00", label: "5:00 PM" },
@@ -90,17 +56,11 @@ export default function TableAvailabilityWidget({ onSelectType }: TableAvailabil
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block text-xs text-[#A7A4B8] mb-1">Date</label>
-          <select
+          <CalendarPopup
             value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full px-3 py-2 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] text-sm focus:border-[#E85D04] outline-none cursor-pointer"
-          >
-            {dateOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            onChange={setSelectedDate}
+            minDate={new Date().toISOString().split("T")[0]}
+          />
         </div>
         <div>
           <label className="block text-xs text-[#A7A4B8] mb-1">Time</label>
