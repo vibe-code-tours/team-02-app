@@ -1,11 +1,14 @@
 export interface MenuItem {
   id: string;
   name: string;
-  cuisine: string;
+  description: string;           // 1-2 sentence description for semantic search
+  cuisine: "Myanmar" | "Western" | "European" | "Thai";
   course: "starter" | "main" | "dessert";
-  moodDescription: string;
-  tags: string[];
-  emoji: string;
+  price: number;                 // USD, display only
+  dietaryTags: string[];         // e.g. ["vegetarian", "gluten-free"]
+  moodTags: string[];            // e.g. ["comforting", "cozy", "warming"]
+  moodDescription: string;       // Longer text explaining why this dish fits certain moods
+  imageUrl?: string;             // Optional placeholder image path
 }
 
 export interface CourseRecommendation {
@@ -67,6 +70,7 @@ export interface GuestRegistration {
 // ── Customer Feedback ──────────────────────────────────────
 
 export interface CustomerFeedback {
+  email: string;
   overallRating: number;
   foodQuality: number;
   ambianceRating: number;
