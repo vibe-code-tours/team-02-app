@@ -1,123 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import HeroSection from "@/components/landing/HeroSection";
-import EmailInput from "@/components/landing/EmailInput";
-import AccessCodeEntry from "@/components/landing/AccessCodeEntry";
-
-type ViewMode = "email" | "otp";
 
 export default function Home() {
-  const [viewMode, setViewMode] = useState<ViewMode>("email");
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleEmailSubmit = async (submittedEmail: string) => {
-    setEmail(submittedEmail);
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // TODO: Call API to send OTP
-      console.log("Sending OTP to:", submittedEmail);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Switch to OTP view
-      setViewMode("otp");
-    } catch {
-      setError("Failed to send OTP. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOtpSubmit = async (code: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // TODO: Call API to verify OTP
-      console.log("Verifying code:", code);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // For demo: any 6-digit code works
-      if (code.length === 6) {
-        // TODO: Redirect to dashboard
-        alert(`Code verified! Welcome to SonicSavor.\n\nEmail: ${email}\nCode: ${code}`);
-      } else {
-        setError("Invalid code. Please try again.");
-      }
-    } catch {
-      setError("Verification failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleBackToEmail = () => {
-    setViewMode("email");
-    setError(null);
-  };
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-[#0F0E17]">
       <HeroSection>
-        {viewMode === "email" ? (
-          <div className="space-y-6">
-            <EmailInput
-              onSubmit={handleEmailSubmit}
-              disabled={isLoading}
-              isLoading={isLoading}
-            />
+        <div className="space-y-6">
+          {/* Primary CTA - Checkin */}
+          <button
+            onClick={() => router.push("/checkin")}
+            className="w-full py-4 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-semibold rounded-xl transition-all text-lg"
+          >
+            🎵 Enter Access Code
+          </button>
 
-            {/* Divider */}
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-[#242334]" />
-              <span className="text-sm text-[#A7A4B8]">or</span>
-              <div className="flex-1 h-px bg-[#242334]" />
-            </div>
+          {/* Secondary CTA - Register */}
+          <button
+            onClick={() => router.push("/register")}
+            className="w-full py-4 bg-[#1A1926] border border-[#242334] hover:border-[#9D4EDD] text-[#F5F3F0] font-semibold rounded-xl transition-all text-lg"
+          >
+            ✨ Create Account
+          </button>
 
-            {/* Sign in hint */}
-            <p className="text-sm text-[#A7A4B8] text-center">
-              Returning? Just enter your email above — we&apos;ll recognize you. 💜
-            </p>
-
-            {error && (
-              <div className="text-center text-[#E63946] text-sm">
-                {error}
-              </div>
-            )}
+          {/* Divider */}
+          <div className="flex items-center gap-4">
+            <div className="flex-1 h-px bg-[#242334]" />
+            <span className="text-sm text-[#A7A4B8]">or</span>
+            <div className="flex-1 h-px bg-[#242334]" />
           </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Back button */}
-            <button
-              onClick={handleBackToEmail}
-              disabled={isLoading}
-              className="text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors text-sm flex items-center gap-2 mx-auto"
-            >
-              ← Back to email
-            </button>
 
-            {/* Email display */}
-            <p className="text-sm text-[#A7A4B8] text-center">
-              Code sent to <span className="text-[#F5F3F0]">{email}</span>
-            </p>
-
-            {/* OTP Input */}
-            <AccessCodeEntry
-              onSubmit={handleOtpSubmit}
-              disabled={isLoading}
-              isLoading={isLoading}
-              error={error}
-            />
-          </div>
-        )}
+          {/* Browse Only */}
+          <button
+            onClick={() => router.push("/menu")}
+            className="w-full py-3 text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors text-sm"
+          >
+            👀 Browse Menu Only
+          </button>
+        </div>
       </HeroSection>
     </main>
   );

@@ -1,0 +1,78 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import AccessCodeEntry from "@/components/landing/AccessCodeEntry";
+
+export default function CheckinPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCodeSubmit = async (code: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // TODO: Call API to verify access code
+      console.log("Verifying access code:", code);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // For demo: any 6-digit code works
+      if (code.length === 6) {
+        // Store session and redirect to dashboard
+        localStorage.setItem("sonicsavor_session", JSON.stringify({
+          code,
+          loginTime: new Date().toISOString(),
+          expiresIn: 4 * 60 * 60 * 1000, // 4 hours
+        }));
+
+        router.push("/dashboard");
+      } else {
+        setError("Invalid code. Please try again.");
+      }
+    } catch {
+      setError("Verification failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-[#0F0E17] flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-[#F5F3F0]">
+            Welcome to SonicSavor 🎵
+          </h1>
+          <p className="text-[#A7A4B8]">
+            Enter your 6-digit access code from our staff to continue
+          </p>
+        </div>
+
+        {/* Access Code Entry */}
+        <div className="bg-[#1A1926] border border-[#242334] rounded-2xl p-8">
+          <AccessCodeEntry
+            onSubmit={handleCodeSubmit}
+            disabled={isLoading}
+            isLoading={isLoading}
+            error={error}
+          />
+        </div>
+
+        {/* Back to Home */}
+        <div className="text-center">
+          <button
+            onClick={() => router.push("/")}
+            className="text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors text-sm"
+          >
+            ← Back to Home
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+}
