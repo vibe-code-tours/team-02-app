@@ -22,13 +22,16 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      // TODO: Call API to send OTP to email
-      console.log("Sending OTP to:", submittedEmail);
+      const res = await fetch("/api/auth/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: submittedEmail }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (!res.ok) {
+        throw new Error("Failed to send OTP");
+      }
 
-      // Switch to OTP view
       setViewMode("otp");
     } catch {
       setError("Failed to send OTP. Please try again.");
@@ -42,26 +45,28 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      // TODO: Call API to verify OTP and create account
-      console.log("Verifying OTP:", otp);
+      const res = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: otp }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await res.json();
 
-      // For demo: any 6-digit code works
-      if (otp.length === 6) {
-        // Store session and redirect to dashboard
-        localStorage.setItem("sonicsavor_session", JSON.stringify({
-          email,
-          otp,
-          loginTime: new Date().toISOString(),
-          expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days for registered users
-        }));
-
-        router.push("/dashboard");
-      } else {
-        setError("Invalid code. Please try again.");
+      if (!res.ok) {
+        setError(data.error || "Invalid code. Please try again.");
+        return;
       }
+
+      // Store session and redirect to dashboard
+      localStorage.setItem("sonicsavor_session", JSON.stringify({
+        email,
+        otp,
+        loginTime: new Date().toISOString(),
+        expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days for registered users
+      }));
+
+      router.push("/dashboard");
     } catch {
       setError("Verification failed. Please try again.");
     } finally {

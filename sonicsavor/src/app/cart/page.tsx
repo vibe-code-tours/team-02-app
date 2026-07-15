@@ -4,11 +4,35 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PublicHeader from "@/components/layout/PublicHeader";
 import Footer from "@/components/layout/Footer";
-import type { MenuItem } from "@/types";
+import type { MenuItem, CourseRecommendation } from "@/types";
+
+// Cart can hold either MenuItems (from /menu) or CourseRecommendations (from /suggestions)
+type CartItemType = MenuItem | CourseRecommendation;
 
 interface CartItem {
-  item: MenuItem;
+  item: CartItemType;
   quantity: number;
+}
+
+// Helper to get unique ID from either type
+function getItemId(item: CartItemType): string {
+  if ("id" in item) return item.id;
+  if ("dishName" in item) return item.dishName;
+  return "";
+}
+
+// Helper to get item name
+function getItemName(item: CartItemType): string {
+  if ("name" in item) return item.name;
+  if ("dishName" in item) return item.dishName;
+  return "";
+}
+
+// Helper to get emoji/icon
+function getItemIcon(item: CartItemType): string {
+  if ("emoji" in item) return item.emoji;
+  if ("icon" in item) return item.icon;
+  return "🍽️";
 }
 
 export default function CartPage() {
@@ -35,7 +59,8 @@ export default function CartPage() {
   const updateQuantity = (itemId: string, delta: number) => {
     setCart(prev => {
       const updated = prev.map(c => {
-        if (c.item.id === itemId) {
+        const itemIdentifier = getItemId(c.item);
+        if (itemIdentifier === itemId) {
           const newQty = c.quantity + delta;
           return newQty > 0 ? { ...c, quantity: newQty } : c;
         }
@@ -46,7 +71,7 @@ export default function CartPage() {
   };
 
   const removeItem = (itemId: string) => {
-    setCart(prev => prev.filter(c => c.item.id !== itemId));
+    setCart(prev => prev.filter(c => getItemId(c.item) !== itemId));
   };
 
   const clearCart = () => {
@@ -127,23 +152,23 @@ export default function CartPage() {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-              {cart.map((cartItem) => (
+              {cart.map((cartItem, index) => (
                 <div
-                  key={cartItem.item.id}
+                  key={getItemId(cartItem.item) || index}
                   className="bg-[#1A1926] rounded-xl p-4 border border-[#242334] flex gap-4"
                 >
                   {/* Emoji */}
-                  <div className="text-4xl flex-shrink-0">{cartItem.item.emoji}</div>
+                  <div className="text-4xl flex-shrink-0">{getItemIcon(cartItem.item)}</div>
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="font-semibold text-[#F5F3F0]">{cartItem.item.name}</h3>
+                        <h3 className="font-semibold text-[#F5F3F0]">{getItemName(cartItem.item)}</h3>
                         <p className="text-sm text-[#A7A4B8] capitalize">{cartItem.item.course}</p>
                       </div>
                       <button
-                        onClick={() => removeItem(cartItem.item.id)}
+                        onClick={() => removeItem(getItemId(cartItem.item))}
                         className="text-[#A7A4B8] hover:text-[#E63946] transition-colors"
                         aria-label="Remove item"
                       >
@@ -156,7 +181,7 @@ export default function CartPage() {
                     {/* Quantity Controls */}
                     <div className="flex items-center gap-3 mt-3">
                       <button
-                        onClick={() => updateQuantity(cartItem.item.id, -1)}
+                        onClick={() => updateQuantity(getItemId(cartItem.item), -1)}
                         className="w-8 h-8 rounded-lg bg-[#242334] hover:bg-[#E85D04] text-[#F5F3F0] flex items-center justify-center transition-colors"
                         aria-label="Decrease quantity"
                       >
@@ -168,7 +193,7 @@ export default function CartPage() {
                         {cartItem.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(cartItem.item.id, 1)}
+                        onClick={() => updateQuantity(getItemId(cartItem.item), 1)}
                         className="w-8 h-8 rounded-lg bg-[#242334] hover:bg-[#E85D04] text-[#F5F3F0] flex items-center justify-center transition-colors"
                         aria-label="Increase quantity"
                       >

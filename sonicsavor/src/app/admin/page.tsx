@@ -69,10 +69,6 @@ export default function AdminPage() {
     setModalView("generate-otp");
   };
 
-  const handleCheckIn = () => {
-    setModalView("check-in");
-  };
-
   const handleWalkInSubmit = (data: {
     tableType: string;
     partySize: number;
@@ -121,7 +117,6 @@ export default function AdminPage() {
         {/* Quick Actions */}
         <QuickActions
           onGenerateOTP={handleGenerateOTP}
-          onCheckIn={handleCheckIn}
           onShowTableMap={handleShowTableMap}
         />
 
@@ -138,7 +133,7 @@ export default function AdminPage() {
         )}
 
         {/* Walk-in Form (when modal is open) */}
-        {(modalView === "generate-otp" || modalView === "check-in") && (
+        {modalView === "generate-otp" && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="w-full max-w-md">
               <WalkInForm

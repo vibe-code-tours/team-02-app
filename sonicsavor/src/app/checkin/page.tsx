@@ -16,25 +16,27 @@ export default function CheckinPage() {
     setError(null);
 
     try {
-      // TODO: Call API to verify access code
-      console.log("Verifying access code:", code);
+      const res = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, type: "access-code" }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await res.json();
 
-      // For demo: any 6-digit code works
-      if (code.length === 6) {
-        // Store session and redirect to dashboard
-        localStorage.setItem("sonicsavor_session", JSON.stringify({
-          code,
-          loginTime: new Date().toISOString(),
-          expiresIn: 4 * 60 * 60 * 1000, // 4 hours
-        }));
-
-        router.push("/dashboard");
-      } else {
-        setError("Invalid code. Please try again.");
+      if (!res.ok) {
+        setError(data.error || "Invalid code. Please try again.");
+        return;
       }
+
+      // Store session and redirect to dashboard
+      localStorage.setItem("sonicsavor_session", JSON.stringify({
+        code,
+        loginTime: new Date().toISOString(),
+        expiresIn: 4 * 60 * 60 * 1000, // 4 hours
+      }));
+
+      router.push("/dashboard");
     } catch {
       setError("Verification failed. Please try again.");
     } finally {

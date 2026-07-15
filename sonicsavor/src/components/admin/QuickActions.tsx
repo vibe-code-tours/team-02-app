@@ -2,13 +2,11 @@
 
 interface QuickActionsProps {
   onGenerateOTP: () => void;
-  onCheckIn: () => void;
   onShowTableMap: () => void;
 }
 
 export default function QuickActions({
   onGenerateOTP,
-  onCheckIn,
   onShowTableMap,
 }: QuickActionsProps) {
   return (
@@ -17,7 +15,7 @@ export default function QuickActions({
         Quick Actions
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Generate OTP Button */}
         <button
           onClick={onGenerateOTP}
@@ -27,17 +25,6 @@ export default function QuickActions({
             <path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
           </svg>
           Generate OTP
-        </button>
-
-        {/* Check In Button */}
-        <button
-          onClick={onCheckIn}
-          className="flex items-center justify-center gap-3 px-6 py-4 bg-[#2EC4B6] hover:bg-[#2EC4B6]/90 text-[#0F0E17] font-semibold rounded-xl transition-all"
-        >
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-          </svg>
-          Check In Booking
         </button>
 
         {/* Table Map Button */}
