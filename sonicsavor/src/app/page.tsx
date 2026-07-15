@@ -19,8 +19,16 @@ export default function Home() {
     setError(null);
 
     try {
-      console.log("Sending OTP to:", submittedEmail);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const res = await fetch("/api/auth/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: submittedEmail }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to send OTP");
+      }
+
       setViewMode("otp");
     } catch {
       setError("Failed to send OTP. Please try again.");
@@ -34,14 +42,20 @@ export default function Home() {
     setError(null);
 
     try {
-      console.log("Verifying code:", code);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
 
-      if (code.length === 6) {
-        alert(`Code verified! Welcome to SonicSavor.\n\nEmail: ${email}\nCode: ${code}`);
-      } else {
-        setError("Invalid code. Please try again.");
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Invalid code. Please try again.");
+        return;
       }
+
+      alert(`Code verified! Welcome to SonicSavor.`);
     } catch {
       setError("Verification failed. Please try again.");
     } finally {
