@@ -1,64 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
-const TABLE_TYPES = [
-  {
-    id: "private",
-    name: "Private",
-    capacity: "2-6 guests",
-    features: ["Soundproof", "Dedicated speaker"],
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      </svg>
-    ),
-  },
-  {
-    id: "family",
-    name: "Family",
-    capacity: "6-8 guests",
-    features: ["Large table", "Kids friendly"],
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-      </svg>
-    ),
-  },
-  {
-    id: "squad",
-    name: "Squad",
-    capacity: "3-4 guests",
-    features: ["Central location", "Booth seating"],
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-      </svg>
-    ),
-  },
-  {
-    id: "duo",
-    name: "Duo",
-    capacity: "2 guests",
-    features: ["Window seat", "Candle lit"],
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
-    ),
-  },
-  {
-    id: "single",
-    name: "Solo",
-    capacity: "1 guest",
-    features: ["Corner seat", "Power outlet"],
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-      </svg>
-    ),
-  },
-];
+import { useState, useEffect } from "react";
+import { TABLE_CONFIG, getTableAvailability, getAvailableTimeSlots, getMaxPartySize, getMinPartySize } from "@/lib/table-availability";
 
 interface BookingFormProps {
   onSubmit: (data: {
@@ -82,6 +25,33 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
   const [guestEmail, setGuestEmail] = useState("");
   const [occasion, setOccasion] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
+  const [availability, setAvailability] = useState<{ [key: string]: { total: number; available: number } }>({});
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+
+  // Update availability when date/time changes
+  useEffect(() => {
+    if (date && time) {
+      const avail = getTableAvailability(date, time);
+      setAvailability(avail);
+      setAvailableSlots(getAvailableTimeSlots(date));
+
+      // Auto-select first available table type if current is unavailable
+      if (avail[tableType]?.available === 0) {
+        const firstAvailable = Object.keys(avail).find((key) => avail[key].available > 0);
+        if (firstAvailable) {
+          setTableType(firstAvailable);
+        }
+      }
+    }
+  }, [date, time, tableType]);
+
+  // Update party size limits when table type changes
+  useEffect(() => {
+    const min = getMinPartySize(tableType);
+    const max = getMaxPartySize(tableType);
+    if (partySize < min) setPartySize(min);
+    if (partySize > max) setPartySize(max);
+  }, [tableType, partySize]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,35 +67,16 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
     });
   };
 
+  const getTableStatusColor = (available: number, total: number) => {
+    const ratio = available / total;
+    if (ratio > 0.5) return "text-[#2EC4B6]";
+    if (ratio > 0) return "text-[#FFB703]";
+    return "text-[#E63946]";
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Table Type Selection */}
-      <div>
-        <label className="block text-sm font-medium text-[#F5F3F0] mb-3">
-          Select Table Type
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {TABLE_TYPES.map((type) => (
-            <button
-              key={type.id}
-              type="button"
-              onClick={() => setTableType(type.id)}
-              className={`p-4 rounded-lg border-2 transition-colors duration-200 cursor-pointer ${
-                tableType === type.id
-                  ? "border-[#E85D04] bg-[#E85D04]/10"
-                  : "border-[#242334] bg-[#1A1926] hover:border-[#E85D04]/50"
-              }`}
-              aria-pressed={tableType === type.id}
-            >
-              <div className="text-[#E85D04] mb-2">{type.icon}</div>
-              <div className="text-[#F5F3F0] font-medium">{type.name}</div>
-              <div className="text-[#A7A4B8] text-xs">{type.capacity}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Date & Time */}
+      {/* Date & Time - First step */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="booking-date" className="block text-sm font-medium text-[#F5F3F0] mb-2">
@@ -136,6 +87,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            min={new Date().toISOString().split("T")[0]}
             className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
             required
           />
@@ -152,28 +104,84 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
             required
           >
             <option value="">Select time</option>
-            <option value="17:00">5:00 PM</option>
-            <option value="17:30">5:30 PM</option>
-            <option value="18:00">6:00 PM</option>
-            <option value="18:30">6:30 PM</option>
-            <option value="19:00">7:00 PM</option>
-            <option value="19:30">7:30 PM</option>
-            <option value="20:00">8:00 PM</option>
-            <option value="20:30">8:30 PM</option>
-            <option value="21:00">9:00 PM</option>
+            {availableSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                {parseInt(slot.split(":")[0]) > 12
+                  ? `${parseInt(slot.split(":")[0]) - 12}:${slot.split(":")[1]} PM`
+                  : `${slot} AM`}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      {/* Party Size */}
+      {/* Table Type Selection - With real-time availability */}
+      <div>
+        <label className="block text-sm font-medium text-[#F5F3F0] mb-3">
+          Select Table Type
+          {date && time && (
+            <span className="text-[#A7A4B8] font-normal ml-2">
+              (Available tables shown)
+            </span>
+          )}
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {Object.entries(TABLE_CONFIG).map(([key, config]) => {
+            const avail = availability[key] || { total: config.total, available: config.total };
+            const isAvailable = avail.available > 0;
+            const isSelected = tableType === key;
+
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => isAvailable && setTableType(key)}
+                disabled={!isAvailable}
+                className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                  isSelected
+                    ? "border-[#E85D04] bg-[#E85D04]/10"
+                    : isAvailable
+                    ? "border-[#242334] bg-[#1A1926] hover:border-[#E85D04]/50 cursor-pointer"
+                    : "border-[#242334] bg-[#242334]/30 opacity-50 cursor-not-allowed"
+                }`}
+                aria-pressed={isSelected}
+                aria-disabled={!isAvailable}
+              >
+                <svg
+                  className={`w-6 h-6 mx-auto mb-2 ${isSelected ? "text-[#E85D04]" : "text-[#A7A4B8]"}`}
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d={config.icon}/>
+                </svg>
+                <div className="text-[#F5F3F0] font-medium">{config.label}</div>
+                <div className="text-[#A7A4B8] text-xs mb-2">{config.capacity} ppl</div>
+                {date && time && (
+                  <div className={`text-lg font-semibold ${getTableStatusColor(avail.available, avail.total)}`}>
+                    {avail.available}/{avail.total}
+                  </div>
+                )}
+                {!isAvailable && (
+                  <div className="text-[#E63946] text-xs mt-1">Fully booked</div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Party Size - With limits based on table type */}
       <div>
         <label htmlFor="party-size" className="block text-sm font-medium text-[#F5F3F0] mb-2">
           Party Size
+          <span className="text-[#A7A4B8] font-normal ml-2">
+            ({getMinPartySize(tableType)}-{getMaxPartySize(tableType)} guests for {TABLE_CONFIG[tableType as keyof typeof TABLE_CONFIG].label})
+          </span>
         </label>
         <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={() => setPartySize(Math.max(1, partySize - 1))}
+            onClick={() => setPartySize(Math.max(getMinPartySize(tableType), partySize - 1))}
             className="w-12 h-12 rounded-full bg-[#1A1926] border border-[#242334] text-[#F5F3F0] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
             aria-label="Decrease party size"
           >
@@ -186,7 +194,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
           </span>
           <button
             type="button"
-            onClick={() => setPartySize(Math.min(8, partySize + 1))}
+            onClick={() => setPartySize(Math.min(getMaxPartySize(tableType), partySize + 1))}
             className="w-12 h-12 rounded-full bg-[#1A1926] border border-[#242334] text-[#F5F3F0] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
             aria-label="Increase party size"
           >
@@ -268,7 +276,8 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-4 bg-[#E85D04] text-[#F5F3F0] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer"
+        disabled={!date || !time || (availability[tableType]?.available === 0)}
+        className="w-full py-4 bg-[#E85D04] text-[#F5F3F0] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span className="flex items-center justify-center gap-2">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

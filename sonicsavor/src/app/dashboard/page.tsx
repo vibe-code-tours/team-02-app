@@ -5,14 +5,6 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import QuickAccessCards from "@/components/dashboard/QuickAccessCards";
 import TableAvailabilityWidget from "@/components/dashboard/TableAvailabilityWidget";
 
-const MOCK_AVAILABILITY = {
-  family: { total: 5, available: 3 },
-  squad: { total: 5, available: 4 },
-  duo: { total: 4, available: 2 },
-  single: { total: 4, available: 4 },
-  private: { total: 4, available: 1 },
-};
-
 export default function DashboardPage() {
   const [guestName] = useState("Sarah Chen");
   const [tableInfo] = useState("Private Table 2");
@@ -55,7 +47,6 @@ export default function DashboardPage() {
         <QuickAccessCards onNavigate={handleNavigate} />
 
         <TableAvailabilityWidget
-          availability={MOCK_AVAILABILITY}
           onSelectType={handleSelectType}
         />
 
