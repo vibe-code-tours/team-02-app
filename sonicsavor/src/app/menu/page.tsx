@@ -127,9 +127,8 @@ export default function MenuPage() {
                   : "border-[#242334]"
               }`}
             >
-              {/* Emoji + Course Badge */}
+              {/* Course Badge */}
               <div className="flex items-center justify-between mb-3">
-                <span className="text-4xl">{item.emoji}</span>
                 <span className="text-xs px-2 py-1 rounded-full bg-[#242334] text-[#A7A4B8] capitalize">
                   {item.course}
                 </span>
@@ -152,7 +151,7 @@ export default function MenuPage() {
 
               {/* Tags */}
               <div className="flex flex-wrap gap-1 mb-4">
-                {item.tags.slice(0, 3).map((tag) => (
+                {item.moodTags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
                     className="text-xs px-2 py-0.5 rounded bg-[#9D4EDD]/20 text-[#9D4EDD]"

@@ -30,8 +30,7 @@ function getItemName(item: CartItemType): string {
 
 // Helper to get emoji/icon
 function getItemIcon(item: CartItemType): string {
-  if ("emoji" in item) return item.emoji;
-  if ("icon" in item) return item.icon;
+  if ("icon" in item && typeof item.icon === "string") return item.icon;
   return "🍽️";
 }
 

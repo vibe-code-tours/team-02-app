@@ -73,6 +73,7 @@ export default function CustomerFeedbackForm({
     e.preventDefault();
     if (!isValid || disabled) return;
     onSubmit({
+      email: "",
       overallRating,
       foodQuality,
       ambianceRating,
