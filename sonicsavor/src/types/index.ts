@@ -70,6 +70,7 @@ export interface GuestRegistration {
 // ── Customer Feedback ──────────────────────────────────────
 
 export interface CustomerFeedback {
+  email: string;
   overallRating: number;
   foodQuality: number;
   ambianceRating: number;

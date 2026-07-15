@@ -5,7 +5,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-!.env.example
+
 
 # Node / Package managers
 node_modules/
@@ -63,3 +63,4 @@ Thumbs.db
 
 # Supabase local
 sonicsavor/supabase/
+.local-notes/
