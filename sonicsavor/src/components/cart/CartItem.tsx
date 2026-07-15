@@ -18,11 +18,11 @@ export default function CartItem({
   onRemove,
 }: CartItemProps) {
   return (
-    <div className="flex items-center gap-4 bg-[#1A1A2E] border border-[#232946] rounded-xl p-4">
+    <div className="flex items-center gap-4 bg-[#1A1926] border border-[#242334] rounded-xl p-4">
       {/* Item Image Placeholder */}
-      <div className="w-16 h-16 bg-[#232946] rounded-lg flex items-center justify-center flex-shrink-0">
+      <div className="w-16 h-16 bg-[#242334] rounded-lg flex items-center justify-center flex-shrink-0">
         <svg
-          className="w-8 h-8 text-[#94A1B2]"
+          className="w-8 h-8 text-[#A7A4B8]"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
@@ -32,27 +32,27 @@ export default function CartItem({
 
       {/* Item Details */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-[#FFFFFE] font-medium truncate">{name}</h3>
-        <p className="text-[#2CB67D] font-semibold">${price.toFixed(2)}</p>
+        <h3 className="text-[#F5F3F0] font-medium truncate">{name}</h3>
+        <p className="text-[#2EC4B6] font-semibold">${price.toFixed(2)}</p>
       </div>
 
       {/* Quantity Controls */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => onUpdateQuantity(id, Math.max(0, quantity - 1))}
-          className="w-8 h-8 rounded-full bg-[#232946] text-[#FFFFFE] flex items-center justify-center hover:bg-[#E85D04] transition-colors duration-200 cursor-pointer"
+          className="w-8 h-8 rounded-full bg-[#242334] text-[#F5F3F0] flex items-center justify-center hover:bg-[#E85D04] transition-colors duration-200 cursor-pointer"
           aria-label={`Decrease quantity of ${name}`}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13H5v-2h14v2z" />
           </svg>
         </button>
-        <span className="w-8 text-center text-[#FFFFFE] font-medium">
+        <span className="w-8 text-center text-[#F5F3F0] font-medium">
           {quantity}
         </span>
         <button
           onClick={() => onUpdateQuantity(id, quantity + 1)}
-          className="w-8 h-8 rounded-full bg-[#232946] text-[#FFFFFE] flex items-center justify-center hover:bg-[#E85D04] transition-colors duration-200 cursor-pointer"
+          className="w-8 h-8 rounded-full bg-[#242334] text-[#F5F3F0] flex items-center justify-center hover:bg-[#E85D04] transition-colors duration-200 cursor-pointer"
           aria-label={`Increase quantity of ${name}`}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -64,7 +64,7 @@ export default function CartItem({
       {/* Remove Button */}
       <button
         onClick={() => onRemove(id)}
-        className="p-2 text-[#94A1B2] hover:text-[#FF6B6B] transition-colors duration-200 cursor-pointer"
+        className="p-2 text-[#A7A4B8] hover:text-[#E63946] transition-colors duration-200 cursor-pointer"
         aria-label={`Remove ${name} from cart`}
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

@@ -31,7 +31,7 @@ export default function MenuItem({
     return Array.from({ length: 3 }, (_, i) => (
       <svg
         key={i}
-        className={`w-3 h-3 ${i < level ? "text-[#E85D04]" : "text-[#232946]"}`}
+        className={`w-3 h-3 ${i < level ? "text-[#E85D04]" : "text-[#242334]"}`}
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -42,14 +42,14 @@ export default function MenuItem({
 
   return (
     <div
-      className={`bg-[#1A1A2E] border border-[#232946] rounded-xl overflow-hidden transition-colors duration-200 ${
+      className={`bg-[#1A1926] border border-[#242334] rounded-xl overflow-hidden transition-colors duration-200 ${
         available ? "hover:border-[#E85D04]/50" : "opacity-50"
       }`}
     >
       {/* Image Placeholder */}
-      <div className="h-40 bg-[#232946] flex items-center justify-center">
+      <div className="h-40 bg-[#242334] flex items-center justify-center">
         <svg
-          className="w-12 h-12 text-[#94A1B2]"
+          className="w-12 h-12 text-[#A7A4B8]"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
@@ -61,21 +61,21 @@ export default function MenuItem({
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-[#FFFFFE] font-semibold">{name}</h3>
-            <p className="text-xs text-[#94A1B2]">{cuisine}</p>
+            <h3 className="text-[#F5F3F0] font-semibold">{name}</h3>
+            <p className="text-xs text-[#A7A4B8]">{cuisine}</p>
           </div>
-          <span className="text-[#2CB67D] font-bold">${price.toFixed(2)}</span>
+          <span className="text-[#2EC4B6] font-bold">${price.toFixed(2)}</span>
         </div>
 
         {/* Description */}
-        <p className="text-sm text-[#94A1B2] line-clamp-2">{description}</p>
+        <p className="text-sm text-[#A7A4B8] line-clamp-2">{description}</p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2">
           {moodTags.slice(0, 2).map((tag) => (
             <span
               key={tag}
-              className="px-2 py-1 bg-[#F58AE0]/10 text-[#F58AE0] text-xs rounded-full"
+              className="px-2 py-1 bg-[#9D4EDD]/10 text-[#9D4EDD] text-xs rounded-full"
             >
               {tag}
             </span>
@@ -83,7 +83,7 @@ export default function MenuItem({
           {dietary.map((item) => (
             <span
               key={item}
-              className="px-2 py-1 bg-[#2CB67D]/10 text-[#2CB67D] text-xs rounded-full"
+              className="px-2 py-1 bg-[#2EC4B6]/10 text-[#2EC4B6] text-xs rounded-full"
             >
               {item}
             </span>
@@ -93,7 +93,7 @@ export default function MenuItem({
         {/* Spice Level */}
         {spiceLevel > 0 && (
           <div className="flex items-center gap-1">
-            <span className="text-xs text-[#94A1B2] mr-1">Spice:</span>
+            <span className="text-xs text-[#A7A4B8] mr-1">Spice:</span>
             {getSpiceIcon(spiceLevel)}
           </div>
         )}
@@ -104,8 +104,8 @@ export default function MenuItem({
           disabled={!available}
           className={`w-full py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
             available
-              ? "bg-[#E85D04] text-[#FFFFFE] hover:bg-[#E85D04]/90 cursor-pointer"
-              : "bg-[#232946] text-[#94A1B2] cursor-not-allowed"
+              ? "bg-[#E85D04] text-[#F5F3F0] hover:bg-[#E85D04]/90 cursor-pointer"
+              : "bg-[#242334] text-[#A7A4B8] cursor-not-allowed"
           }`}
           aria-label={`Add ${name} to cart`}
         >

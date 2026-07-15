@@ -47,9 +47,9 @@ const MOODS = [
 export default function MoodFilter({ selectedMood, onSelect }: MoodFilterProps) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-[#FFFFFE] flex items-center gap-2">
+      <h3 className="text-sm font-medium text-[#F5F3F0] flex items-center gap-2">
         <svg
-          className="w-4 h-4 text-[#F58AE0]"
+          className="w-4 h-4 text-[#9D4EDD]"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
@@ -62,8 +62,8 @@ export default function MoodFilter({ selectedMood, onSelect }: MoodFilterProps) 
           onClick={() => onSelect(null)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors duration-200 cursor-pointer ${
             selectedMood === null
-              ? "bg-[#E85D04] text-[#FFFFFE]"
-              : "bg-[#1A1A2E] text-[#94A1B2] hover:text-[#FFFFFE]"
+              ? "bg-[#E85D04] text-[#F5F3F0]"
+              : "bg-[#1A1926] text-[#A7A4B8] hover:text-[#F5F3F0]"
           }`}
           aria-pressed={selectedMood === null}
         >
@@ -75,8 +75,8 @@ export default function MoodFilter({ selectedMood, onSelect }: MoodFilterProps) 
             onClick={() => onSelect(mood.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors duration-200 cursor-pointer ${
               selectedMood === mood.id
-                ? "bg-[#E85D04] text-[#FFFFFE]"
-                : "bg-[#1A1A2E] text-[#94A1B2] hover:text-[#FFFFFE]"
+                ? "bg-[#E85D04] text-[#F5F3F0]"
+                : "bg-[#1A1926] text-[#A7A4B8] hover:text-[#F5F3F0]"
             }`}
             aria-pressed={selectedMood === mood.id}
           >

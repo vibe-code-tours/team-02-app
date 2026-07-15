@@ -43,10 +43,10 @@ export default function BookingPage() {
         {step === "form" ? (
           <>
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-[#FFFFFE] mb-2">
+              <h1 className="text-2xl font-bold text-[#F5F3F0] mb-2">
                 Book a Table
               </h1>
-              <p className="text-[#94A1B2]">
+              <p className="text-[#A7A4B8]">
                 Reserve your spot for a mood-driven dining experience
               </p>
             </div>

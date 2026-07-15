@@ -14,21 +14,21 @@ export default function OrderSummary({
   const total = subtotal + tax;
 
   return (
-    <div className="bg-[#1A1A2E] border border-[#232946] rounded-xl p-4 space-y-4">
-      <h3 className="text-[#FFFFFE] font-semibold">Order Summary</h3>
+    <div className="bg-[#1A1926] border border-[#242334] rounded-xl p-4 space-y-4">
+      <h3 className="text-[#F5F3F0] font-semibold">Order Summary</h3>
 
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-[#94A1B2]">Subtotal</span>
-          <span className="text-[#FFFFFE]">${subtotal.toFixed(2)}</span>
+          <span className="text-[#A7A4B8]">Subtotal</span>
+          <span className="text-[#F5F3F0]">${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-[#94A1B2]">Tax (10%)</span>
-          <span className="text-[#FFFFFE]">${tax.toFixed(2)}</span>
+          <span className="text-[#A7A4B8]">Tax (10%)</span>
+          <span className="text-[#F5F3F0]">${tax.toFixed(2)}</span>
         </div>
-        <div className="border-t border-[#232946] pt-2 flex justify-between">
-          <span className="text-[#FFFFFE] font-semibold">Total</span>
-          <span className="text-[#2CB67D] font-bold text-lg">
+        <div className="border-t border-[#242334] pt-2 flex justify-between">
+          <span className="text-[#F5F3F0] font-semibold">Total</span>
+          <span className="text-[#2EC4B6] font-bold text-lg">
             ${total.toFixed(2)}
           </span>
         </div>
@@ -36,7 +36,7 @@ export default function OrderSummary({
 
       <button
         onClick={onCheckout}
-        className="w-full py-3 bg-[#E85D04] text-[#FFFFFE] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer"
+        className="w-full py-3 bg-[#E85D04] text-[#F5F3F0] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer"
       >
         <span className="flex items-center justify-center gap-2">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

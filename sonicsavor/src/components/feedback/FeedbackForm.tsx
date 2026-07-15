@@ -43,10 +43,10 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Rating Section */}
-      <div className="bg-[#1A1A2E] border border-[#232946] rounded-xl p-4 space-y-5">
-        <h3 className="text-[#FFFFFE] font-semibold flex items-center gap-2">
+      <div className="bg-[#1A1926] border border-[#242334] rounded-xl p-4 space-y-5">
+        <h3 className="text-[#F5F3F0] font-semibold flex items-center gap-2">
           <svg
-            className="w-5 h-5 text-[#F5AE44]"
+            className="w-5 h-5 text-[#FFB703]"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
@@ -78,11 +78,11 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
       </div>
 
       {/* Yes/No Questions */}
-      <div className="bg-[#1A1A2E] border border-[#232946] rounded-xl p-4 space-y-4">
-        <h3 className="text-[#FFFFFE] font-semibold">Quick Questions</h3>
+      <div className="bg-[#1A1926] border border-[#242334] rounded-xl p-4 space-y-4">
+        <h3 className="text-[#F5F3F0] font-semibold">Quick Questions</h3>
 
         <div>
-          <p className="text-sm text-[#94A1B2] mb-2">
+          <p className="text-sm text-[#A7A4B8] mb-2">
             Would you recommend us to a friend?
           </p>
           <div className="flex gap-3">
@@ -91,8 +91,8 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
               onClick={() => setWouldRecommend(true)}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer ${
                 wouldRecommend === true
-                  ? "bg-[#2CB67D] text-[#FFFFFE]"
-                  : "bg-[#232946] text-[#94A1B2] hover:text-[#FFFFFE]"
+                  ? "bg-[#2EC4B6] text-[#F5F3F0]"
+                  : "bg-[#242334] text-[#A7A4B8] hover:text-[#F5F3F0]"
               }`}
             >
               <span className="flex items-center justify-center gap-1">
@@ -111,8 +111,8 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
               onClick={() => setWouldRecommend(false)}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer ${
                 wouldRecommend === false
-                  ? "bg-[#FF6B6B] text-[#FFFFFE]"
-                  : "bg-[#232946] text-[#94A1B2] hover:text-[#FFFFFE]"
+                  ? "bg-[#E63946] text-[#F5F3F0]"
+                  : "bg-[#242334] text-[#A7A4B8] hover:text-[#F5F3F0]"
               }`}
             >
               <span className="flex items-center justify-center gap-1">
@@ -130,7 +130,7 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
         </div>
 
         <div>
-          <p className="text-sm text-[#94A1B2] mb-2">
+          <p className="text-sm text-[#A7A4B8] mb-2">
             Would you visit again?
           </p>
           <div className="flex gap-3">
@@ -139,8 +139,8 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
               onClick={() => setWouldReturn(true)}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer ${
                 wouldReturn === true
-                  ? "bg-[#2CB67D] text-[#FFFFFE]"
-                  : "bg-[#232946] text-[#94A1B2] hover:text-[#FFFFFE]"
+                  ? "bg-[#2EC4B6] text-[#F5F3F0]"
+                  : "bg-[#242334] text-[#A7A4B8] hover:text-[#F5F3F0]"
               }`}
             >
               <span className="flex items-center justify-center gap-1">
@@ -159,8 +159,8 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
               onClick={() => setWouldReturn(false)}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer ${
                 wouldReturn === false
-                  ? "bg-[#FF6B6B] text-[#FFFFFE]"
-                  : "bg-[#232946] text-[#94A1B2] hover:text-[#FFFFFE]"
+                  ? "bg-[#E63946] text-[#F5F3F0]"
+                  : "bg-[#242334] text-[#A7A4B8] hover:text-[#F5F3F0]"
               }`}
             >
               <span className="flex items-center justify-center gap-1">
@@ -179,10 +179,10 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
       </div>
 
       {/* Comments */}
-      <div className="bg-[#1A1A2E] border border-[#232946] rounded-xl p-4">
+      <div className="bg-[#1A1926] border border-[#242334] rounded-xl p-4">
         <label
           htmlFor="feedback-comments"
-          className="block text-sm font-medium text-[#FFFFFE] mb-2"
+          className="block text-sm font-medium text-[#F5F3F0] mb-2"
         >
           Additional Comments
         </label>
@@ -192,7 +192,7 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
           onChange={(e) => setComments(e.target.value)}
           placeholder="Tell us about your experience..."
           rows={4}
-          className="w-full px-4 py-3 bg-[#0F0E17] border border-[#232946] rounded-lg text-[#FFFFFE] placeholder-[#94A1B2] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200 resize-none"
+          className="w-full px-4 py-3 bg-[#0F0E17] border border-[#242334] rounded-lg text-[#F5F3F0] placeholder-[#A7A4B8] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200 resize-none"
         />
       </div>
 
@@ -202,8 +202,8 @@ export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
         disabled={!isValid}
         className={`w-full py-4 font-semibold rounded-lg transition-colors duration-200 ${
           isValid
-            ? "bg-[#E85D04] text-[#FFFFFE] hover:bg-[#E85D04]/90 cursor-pointer"
-            : "bg-[#232946] text-[#94A1B2] cursor-not-allowed"
+            ? "bg-[#E85D04] text-[#F5F3F0] hover:bg-[#E85D04]/90 cursor-pointer"
+            : "bg-[#242334] text-[#A7A4B8] cursor-not-allowed"
         }`}
       >
         Submit Feedback

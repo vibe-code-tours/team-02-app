@@ -15,7 +15,7 @@ export default function RatingStars({
 }: RatingStarsProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#FFFFFE]">
+      <label className="block text-sm font-medium text-[#F5F3F0]">
         {label}
       </label>
       <div className="flex gap-2" role="radiogroup" aria-label={label}>
@@ -25,8 +25,8 @@ export default function RatingStars({
             type="button"
             onClick={() => onChange(star)}
             className={`p-1 transition-colors duration-200 cursor-pointer ${
-              star <= value ? "text-[#F5AE44]" : "text-[#232946]"
-            } hover:text-[#F5AE44]`}
+              star <= value ? "text-[#FFB703]" : "text-[#242334]"
+            } hover:text-[#FFB703]`}
             aria-label={`${star} star${star !== 1 ? "s" : ""}`}
             aria-pressed={star <= value}
           >

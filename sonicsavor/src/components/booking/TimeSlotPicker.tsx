@@ -23,7 +23,7 @@ export default function TimeSlotPicker({
 }: TimeSlotPickerProps) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-[#FFFFFE]">Available Times</h3>
+      <h3 className="text-sm font-medium text-[#F5F3F0]">Available Times</h3>
       <div className="grid grid-cols-3 gap-2">
         {TIME_SLOTS.map((slot) => (
           <button
@@ -34,9 +34,9 @@ export default function TimeSlotPicker({
             className={`py-3 px-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
               slot.available
                 ? selectedTime === slot.time
-                  ? "bg-[#E85D04] text-[#FFFFFE] cursor-pointer"
-                  : "bg-[#1A1A2E] border border-[#232946] text-[#FFFFFE] hover:border-[#E85D04] cursor-pointer"
-                : "bg-[#1A1A2E] border border-[#232946] text-[#94A1B2] opacity-50 cursor-not-allowed"
+                  ? "bg-[#E85D04] text-[#F5F3F0] cursor-pointer"
+                  : "bg-[#1A1926] border border-[#242334] text-[#F5F3F0] hover:border-[#E85D04] cursor-pointer"
+                : "bg-[#1A1926] border border-[#242334] text-[#A7A4B8] opacity-50 cursor-not-allowed"
             }`}
             aria-label={`${slot.label} ${slot.available ? "available" : "unavailable"}`}
             aria-pressed={selectedTime === slot.time}
@@ -45,15 +45,15 @@ export default function TimeSlotPicker({
           </button>
         ))}
       </div>
-      <div className="flex items-center gap-4 text-xs text-[#94A1B2]">
+      <div className="flex items-center gap-4 text-xs text-[#A7A4B8]">
         <span className="flex items-center gap-1">
           <span className="w-3 h-3 rounded bg-[#E85D04]"></span> Selected
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded bg-[#1A1A2E] border border-[#232946]"></span> Available
+          <span className="w-3 h-3 rounded bg-[#1A1926] border border-[#242334]"></span> Available
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded bg-[#1A1A2E] border border-[#232946] opacity-50"></span> Unavailable
+          <span className="w-3 h-3 rounded bg-[#1A1926] border border-[#242334] opacity-50"></span> Unavailable
         </span>
       </div>
     </div>

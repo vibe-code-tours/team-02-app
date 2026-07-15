@@ -101,7 +101,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Table Type Selection */}
       <div>
-        <label className="block text-sm font-medium text-[#FFFFFE] mb-3">
+        <label className="block text-sm font-medium text-[#F5F3F0] mb-3">
           Select Table Type
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -113,13 +113,13 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
               className={`p-4 rounded-lg border-2 transition-colors duration-200 cursor-pointer ${
                 tableType === type.id
                   ? "border-[#E85D04] bg-[#E85D04]/10"
-                  : "border-[#232946] bg-[#1A1A2E] hover:border-[#E85D04]/50"
+                  : "border-[#242334] bg-[#1A1926] hover:border-[#E85D04]/50"
               }`}
               aria-pressed={tableType === type.id}
             >
               <div className="text-[#E85D04] mb-2">{type.icon}</div>
-              <div className="text-[#FFFFFE] font-medium">{type.name}</div>
-              <div className="text-[#94A1B2] text-xs">{type.capacity}</div>
+              <div className="text-[#F5F3F0] font-medium">{type.name}</div>
+              <div className="text-[#A7A4B8] text-xs">{type.capacity}</div>
             </button>
           ))}
         </div>
@@ -128,7 +128,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
       {/* Date & Time */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label htmlFor="booking-date" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+          <label htmlFor="booking-date" className="block text-sm font-medium text-[#F5F3F0] mb-2">
             Date
           </label>
           <input
@@ -136,19 +136,19 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
+            className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
             required
           />
         </div>
         <div>
-          <label htmlFor="booking-time" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+          <label htmlFor="booking-time" className="block text-sm font-medium text-[#F5F3F0] mb-2">
             Time
           </label>
           <select
             id="booking-time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
-            className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
+            className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
             required
           >
             <option value="">Select time</option>
@@ -167,27 +167,27 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
 
       {/* Party Size */}
       <div>
-        <label htmlFor="party-size" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+        <label htmlFor="party-size" className="block text-sm font-medium text-[#F5F3F0] mb-2">
           Party Size
         </label>
         <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => setPartySize(Math.max(1, partySize - 1))}
-            className="w-12 h-12 rounded-full bg-[#1A1A2E] border border-[#232946] text-[#FFFFFE] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
+            className="w-12 h-12 rounded-full bg-[#1A1926] border border-[#242334] text-[#F5F3F0] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
             aria-label="Decrease party size"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 13H5v-2h14v2z"/>
             </svg>
           </button>
-          <span id="party-size" className="text-2xl font-bold text-[#FFFFFE] w-12 text-center">
+          <span id="party-size" className="text-2xl font-bold text-[#F5F3F0] w-12 text-center">
             {partySize}
           </span>
           <button
             type="button"
             onClick={() => setPartySize(Math.min(8, partySize + 1))}
-            className="w-12 h-12 rounded-full bg-[#1A1A2E] border border-[#232946] text-[#FFFFFE] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
+            className="w-12 h-12 rounded-full bg-[#1A1926] border border-[#242334] text-[#F5F3F0] flex items-center justify-center hover:border-[#E85D04] transition-colors duration-200 cursor-pointer"
             aria-label="Increase party size"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -200,7 +200,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
       {/* Guest Info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="guest-name" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+          <label htmlFor="guest-name" className="block text-sm font-medium text-[#F5F3F0] mb-2">
             Your Name
           </label>
           <input
@@ -209,12 +209,12 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
             value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
             placeholder="Enter your name"
-            className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] placeholder-[#94A1B2] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
+            className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] placeholder-[#A7A4B8] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
             required
           />
         </div>
         <div>
-          <label htmlFor="guest-email" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+          <label htmlFor="guest-email" className="block text-sm font-medium text-[#F5F3F0] mb-2">
             Email Address
           </label>
           <input
@@ -223,7 +223,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
             value={guestEmail}
             onChange={(e) => setGuestEmail(e.target.value)}
             placeholder="your@email.com"
-            className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] placeholder-[#94A1B2] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
+            className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] placeholder-[#A7A4B8] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
             required
           />
         </div>
@@ -231,14 +231,14 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
 
       {/* Occasion */}
       <div>
-        <label htmlFor="occasion" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+        <label htmlFor="occasion" className="block text-sm font-medium text-[#F5F3F0] mb-2">
           Occasion (Optional)
         </label>
         <select
           id="occasion"
           value={occasion}
           onChange={(e) => setOccasion(e.target.value)}
-          className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
+          className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200"
         >
           <option value="">Select occasion</option>
           <option value="date_night">Date Night</option>
@@ -252,7 +252,7 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
 
       {/* Special Requests */}
       <div>
-        <label htmlFor="special-requests" className="block text-sm font-medium text-[#FFFFFE] mb-2">
+        <label htmlFor="special-requests" className="block text-sm font-medium text-[#F5F3F0] mb-2">
           Special Requests (Optional)
         </label>
         <textarea
@@ -261,14 +261,14 @@ export default function BookingForm({ onSubmit }: BookingFormProps) {
           onChange={(e) => setSpecialRequests(e.target.value)}
           placeholder="Dietary restrictions, seating preferences, etc."
           rows={3}
-          className="w-full px-4 py-3 bg-[#1A1A2E] border border-[#232946] rounded-lg text-[#FFFFFE] placeholder-[#94A1B2] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200 resize-none"
+          className="w-full px-4 py-3 bg-[#1A1926] border border-[#242334] rounded-lg text-[#F5F3F0] placeholder-[#A7A4B8] focus:border-[#E85D04] focus:ring-1 focus:ring-[#E85D04] outline-none transition-colors duration-200 resize-none"
         />
       </div>
 
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-4 bg-[#E85D04] text-[#FFFFFE] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer"
+        className="w-full py-4 bg-[#E85D04] text-[#F5F3F0] font-semibold rounded-lg hover:bg-[#E85D04]/90 transition-colors duration-200 cursor-pointer"
       >
         <span className="flex items-center justify-center gap-2">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
