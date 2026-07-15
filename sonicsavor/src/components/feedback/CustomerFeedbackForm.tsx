@@ -63,18 +63,17 @@ export default function CustomerFeedbackForm({
   const [foodQuality, setFoodQuality] = useState(0);
   const [ambianceRating, setAmbianceRating] = useState(0);
   const [playlistMatch, setPlaylistMatch] = useState(0);
-  const [email, setEmail] = useState("");
   const [comments, setComments] = useState("");
   const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
   const [wouldReturn, setWouldReturn] = useState<boolean | null>(null);
 
-  const isValid = email.trim().length > 0 && overallRating > 0 && foodQuality > 0 && ambianceRating > 0 && playlistMatch > 0;
+  const isValid = overallRating > 0 && foodQuality > 0 && ambianceRating > 0 && playlistMatch > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid || disabled) return;
     onSubmit({
-      email: email.trim(),
+      email: "",
       overallRating,
       foodQuality,
       ambianceRating,
@@ -101,30 +100,6 @@ export default function CustomerFeedbackForm({
       </div>
 
       <div className="space-y-8">
-        {/* ── Email ──────────────────────────────────────── */}
-        <fieldset>
-          <legend className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
-            Your Email
-          </legend>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            disabled={disabled}
-            required
-            className={`
-              w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5
-              text-sm text-zinc-900 placeholder:text-zinc-400
-              focus:outline-none focus:border-stone-400 focus:ring-2 focus:ring-stone-200
-              dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
-              dark:placeholder:text-zinc-500 dark:focus:border-stone-500 dark:focus:ring-stone-800
-              disabled:opacity-50 disabled:pointer-events-none
-              font-[family-name:var(--font-geist-sans)]
-            `}
-          />
-        </fieldset>
-
         {/* ── Star Ratings ───────────────────────────────── */}
         <fieldset>
           <legend className="sr-only">Rate your experience</legend>

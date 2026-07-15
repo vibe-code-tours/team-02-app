@@ -1,246 +1,229 @@
 "use client";
 
-import { useState } from "react";
-import MenuCategory from "@/components/menu/MenuCategory";
-import MenuItem from "@/components/menu/MenuItem";
-import MoodFilter from "@/components/menu/MoodFilter";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { MENU_ITEMS } from "@/lib/menu-data";
+import type { MenuItem } from "@/types";
 
-const MOCK_MENU = [
-  {
-    id: "ST001",
-    name: "Mohinga",
-    description: "Traditional Myanmar fish noodle soup with lemongrass and banana stem",
-    price: 8.5,
-    cuisine: "Myanmar",
-    course: "starter",
-    moodTags: ["comforting", "nostalgic"],
-    dietary: ["gluten-free"],
-    spiceLevel: 1,
-    image: "",
-    available: true,
-  },
-  {
-    id: "ST002",
-    name: "Spring Rolls",
-    description: "Crispy vegetable spring rolls with sweet chili sauce",
-    price: 6.5,
-    cuisine: "Asian",
-    course: "starter",
-    moodTags: ["light", "fresh"],
-    dietary: ["vegan"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-  {
-    id: "MN001",
-    name: "Mushroom Risotto",
-    description: "Creamy arborio rice with wild mushrooms and parmesan",
-    price: 16.0,
-    cuisine: "Italian",
-    course: "main",
-    moodTags: ["cozy", "comforting"],
-    dietary: ["vegetarian"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-  {
-    id: "MN002",
-    name: "Grilled Salmon",
-    description: "Atlantic salmon with lemon butter sauce and seasonal vegetables",
-    price: 22.0,
-    cuisine: "Western",
-    course: "main",
-    moodTags: ["energetic", "fresh"],
-    dietary: ["gluten-free"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-  {
-    id: "MN003",
-    name: "Lahpet Thoke",
-    description: "Fermented tea leaf salad with nuts and sesame",
-    price: 9.0,
-    cuisine: "Myanmar",
-    course: "main",
-    moodTags: ["nostalgic", "unique"],
-    dietary: ["vegan", "gluten-free"],
-    spiceLevel: 1,
-    image: "",
-    available: true,
-  },
-  {
-    id: "DS001",
-    name: "Shwe Yin Aye",
-    description: "Myanmar sweet dessert with jelly, bread, and coconut milk",
-    price: 7.0,
-    cuisine: "Myanmar",
-    course: "dessert",
-    moodTags: ["sweet", "nostalgic"],
-    dietary: ["vegetarian"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-  {
-    id: "DS002",
-    name: "Tiramisu",
-    description: "Classic Italian coffee-flavored dessert",
-    price: 9.0,
-    cuisine: "Italian",
-    course: "dessert",
-    moodTags: ["cozy", "indulgent"],
-    dietary: ["vegetarian"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-  {
-    id: "DR001",
-    name: "Kung Yway",
-    description: "Traditional Myanmar milk tea",
-    price: 4.0,
-    cuisine: "Myanmar",
-    course: "drink",
-    moodTags: ["comforting", "warm"],
-    dietary: ["vegetarian"],
-    spiceLevel: 0,
-    image: "",
-    available: true,
-  },
-];
+type CourseType = "all" | "starter" | "main" | "dessert";
 
-const CATEGORIES = [
-  { id: "all", name: "All", count: MOCK_MENU.length },
-  {
-    id: "starter",
-    name: "Starters",
-    count: MOCK_MENU.filter((i) => i.course === "starter").length,
-  },
-  {
-    id: "main",
-    name: "Mains",
-    count: MOCK_MENU.filter((i) => i.course === "main").length,
-  },
-  {
-    id: "dessert",
-    name: "Desserts",
-    count: MOCK_MENU.filter((i) => i.course === "dessert").length,
-  },
-  {
-    id: "drink",
-    name: "Drinks",
-    count: MOCK_MENU.filter((i) => i.course === "drink").length,
-  },
-];
+interface CartItem {
+  item: MenuItem;
+  quantity: number;
+}
 
 export default function MenuPage() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [cartCount, setCartCount] = useState(0);
+  const router = useRouter();
+  const [selectedCourse, setSelectedCourse] = useState<CourseType>("all");
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  const filteredItems = MOCK_MENU.filter((item) => {
-    const categoryMatch =
-      selectedCategory === "all" || item.course === selectedCategory;
-    const moodMatch =
-      selectedMood === null || item.moodTags.includes(selectedMood);
-    return categoryMatch && moodMatch;
-  });
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem("sonicsavor_cart");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
 
-  const handleAddToCart = (_id: string) => {
-    setCartCount((prev) => prev + 1);
-    // In real app, add to cart state/API
+  // Save cart to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem("sonicsavor_cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const updateQuantity = (itemId: string, delta: number) => {
+    setCart(prev => {
+      const existing = prev.find(c => c.item.id === itemId);
+
+      if (existing) {
+        // Item exists, update quantity
+        const newQty = existing.quantity + delta;
+        if (newQty <= 0) {
+          // Remove item if quantity <= 0
+          return prev.filter(c => c.item.id !== itemId);
+        }
+        return prev.map(c =>
+          c.item.id === itemId ? { ...c, quantity: newQty } : c
+        );
+      } else if (delta > 0) {
+        // Item doesn't exist and we're adding, create new cart item
+        const item = MENU_ITEMS.find(i => i.id === itemId);
+        if (item) {
+          return [...prev, { item, quantity: 1 }];
+        }
+      }
+
+      return prev;
+    });
   };
 
+  const getCartItemQuantity = (itemId: string) => {
+    const cartItem = cart.find(c => c.item.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((sum, c) => sum + c.quantity, 0);
+  };
+
+  const filteredItems = selectedCourse === "all"
+    ? MENU_ITEMS
+    : MENU_ITEMS.filter(item => item.course === selectedCourse);
+
+  const courses: CourseType[] = ["all", "starter", "main", "dessert"];
+
   return (
-    <main className="min-h-screen bg-[#0F0E17] pb-24">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-[#0F0E17] pt-16 pb-20 px-4">
+      <div className="max-w-4xl mx-auto py-8">
+        {/* Header with Cart Button */}
+        <div className="flex items-center justify-between mb-2">
           <div>
             <h1 className="text-2xl font-bold text-[#F5F3F0]">Menu</h1>
-            <p className="text-[#A7A4B8] text-sm">
-              Discover dishes that match your mood
-            </p>
+            <p className="text-[#A7A4B8]">Browse our delicious food & drinks</p>
           </div>
-          {cartCount > 0 && (
-            <div className="relative">
-              <svg
-                className="w-6 h-6 text-[#F5F3F0]"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-              </svg>
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E85D04] text-[#F5F3F0] text-xs rounded-full flex items-center justify-center">
-                {cartCount}
+          <button
+            onClick={() => router.push("/cart")}
+            className="relative p-3 bg-[#1A1926] rounded-xl border border-[#242334] hover:border-[#E85D04] transition-colors"
+            aria-label="View cart"
+          >
+            <svg className="w-6 h-6 text-[#E85D04]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            {getCartCount() > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#E85D04] text-[#F5F3F0] text-xs font-bold rounded-full flex items-center justify-center">
+                {getCartCount()}
               </span>
-            </div>
-          )}
+            )}
+          </button>
         </div>
 
-        {/* Mood Filter */}
-        <div className="mb-6">
-          <MoodFilter selectedMood={selectedMood} onSelect={setSelectedMood} />
-        </div>
-
-        {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
-          {CATEGORIES.map((cat) => (
-            <MenuCategory
-              key={cat.id}
-              name={cat.name}
-              icon={
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
-                </svg>
-              }
-              count={cat.count}
-              isActive={selectedCategory === cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-            />
+        {/* Course Filter */}
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          {courses.map((course) => (
+            <button
+              key={course}
+              onClick={() => setSelectedCourse(course)}
+              className={`px-4 py-2 rounded-lg capitalize whitespace-nowrap transition-all ${
+                selectedCourse === course
+                  ? "bg-[#E85D04] text-[#F5F3F0]"
+                  : "bg-[#1A1926] text-[#A7A4B8] hover:bg-[#242334]"
+              }`}
+            >
+              {course === "all" ? "All" : course === "starter" ? "Starters" : course === "main" ? "Mains" : "Desserts"}
+            </button>
           ))}
         </div>
 
-        {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Menu Grid */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredItems.map((item) => (
-            <MenuItem
+            <div
               key={item.id}
-              id={item.id}
-              name={item.name}
-              description={item.description}
-              price={item.price}
-              cuisine={item.cuisine}
-              moodTags={item.moodTags}
-              dietary={item.dietary}
-              spiceLevel={item.spiceLevel}
-              image={item.image}
-              available={item.available}
-              onAddToCart={handleAddToCart}
-            />
+              onMouseEnter={() => setHoveredItem(item.id)}
+              onMouseLeave={() => setHoveredItem(null)}
+              className={`bg-[#1A1926] border rounded-xl p-5 transition-all cursor-pointer ${
+                hoveredItem === item.id
+                  ? "border-[#E85D04] scale-[1.02]"
+                  : "border-[#242334]"
+              }`}
+            >
+              {/* Course Badge */}
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs px-2 py-1 rounded-full bg-[#242334] text-[#A7A4B8] capitalize">
+                  {item.course}
+                </span>
+              </div>
+
+              {/* Cuisine */}
+              <span className="text-xs text-[#A7A4B8] block mb-1">
+                {item.cuisine}
+              </span>
+
+              {/* Item Name */}
+              <h3 className="text-lg font-semibold text-[#F5F3F0] mb-2">
+                {item.name}
+              </h3>
+
+              {/* Mood Description */}
+              <p className="text-sm text-[#A7A4B8] mb-3 line-clamp-2">
+                {item.moodDescription}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1 mb-4">
+                {item.moodTags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs px-2 py-0.5 rounded bg-[#9D4EDD]/20 text-[#9D4EDD]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Quantity Controls + Add to Cart */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateQuantity(item.id, -1);
+                    }}
+                    disabled={getCartItemQuantity(item.id) === 0}
+                    className="w-10 h-10 rounded-lg font-medium bg-[#242334] hover:bg-[#E63946] disabled:opacity-30 disabled:hover:bg-[#242334] text-[#F5F3F0] transition-colors flex items-center justify-center"
+                    aria-label="Decrease quantity"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                  </button>
+                  <span className="text-lg font-bold text-[#F5F3F0] w-8 text-center">
+                    {getCartItemQuantity(item.id)}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateQuantity(item.id, 1);
+                    }}
+                    className="w-10 h-10 rounded-lg font-medium bg-[#242334] hover:bg-[#2EC4B6] text-[#F5F3F0] transition-colors flex items-center justify-center"
+                    aria-label="Increase quantity"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (getCartItemQuantity(item.id) > 0) {
+                      // Already added via +/-, just show feedback
+                      router.push("/cart");
+                    }
+                  }}
+                  className={`flex-1 h-10 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+                    getCartItemQuantity(item.id) > 0
+                      ? "bg-[#2EC4B6] hover:bg-[#2EC4B6]/80 text-[#0F0E17]"
+                      : "bg-[#E85D04] hover:bg-[#D45303] text-[#F5F3F0]"
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                  </svg>
+                  {getCartItemQuantity(item.id) > 0 ? "View Cart" : "Add to Cart"}
+                </button>
+              </div>
+            </div>
           ))}
         </div>
 
+        {/* Empty State */}
         {filteredItems.length === 0 && (
           <div className="text-center py-12">
-            <svg
-              className="w-16 h-16 mx-auto text-[#242334] mb-4"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
-            </svg>
-            <p className="text-[#A7A4B8]">No items match your mood</p>
+            <p className="text-[#A7A4B8]">No items found for this category</p>
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

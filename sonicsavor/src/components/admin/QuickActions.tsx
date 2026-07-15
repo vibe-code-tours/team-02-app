@@ -2,12 +2,12 @@
 
 interface QuickActionsProps {
   onGenerateOTP: () => void;
-  onCheckIn: () => void;
+  onShowTableMap: () => void;
 }
 
 export default function QuickActions({
   onGenerateOTP,
-  onCheckIn,
+  onShowTableMap,
 }: QuickActionsProps) {
   return (
     <div className="bg-[#1A1926] rounded-xl p-6 border border-[#242334]">
@@ -16,25 +16,26 @@ export default function QuickActions({
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Generate OTP Button */}
         <button
           onClick={onGenerateOTP}
-          className="flex items-center justify-center gap-3 px-6 py-4 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-semibold rounded-xl transition-all duration-200 cursor-pointer"
+          className="flex items-center justify-center gap-3 px-6 py-4 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-semibold rounded-xl transition-all"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
           </svg>
           Generate OTP
         </button>
 
+        {/* Table Map Button */}
         <button
-          onClick={onCheckIn}
-          className="flex items-center justify-center gap-3 px-6 py-4 bg-[#2EC4B6] hover:bg-[#2EC4B6]/90 text-[#0F0E17] font-semibold rounded-xl transition-all duration-200 cursor-pointer"
+          onClick={onShowTableMap}
+          className="flex items-center justify-center gap-3 px-6 py-4 bg-[#9D4EDD] hover:bg-[#9D4EDD]/90 text-[#F5F3F0] font-semibold rounded-xl transition-all"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 7h2v2H7V7zm0 4h2v2H7v-2zm0 4h2v2H7v-2zm4-8h6v2h-6V7zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2z"/>
           </svg>
-          Check In Booking
+          Table Map
         </button>
       </div>
     </div>

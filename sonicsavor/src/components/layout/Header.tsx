@@ -3,7 +3,7 @@
 interface HeaderProps {
   guestName?: string;
   tableInfo?: string;
-  timeRemaining?: number;
+  timeRemaining?: number; // minutes
   onLogout?: () => void;
 }
 
@@ -20,7 +20,7 @@ export default function Header({
   };
 
   const getTimerColor = () => {
-    if (!timeRemaining) return "text-[#A7A4B8]";
+    if (!timeRemaining) return "text-zinc-400";
     if (timeRemaining > 60) return "text-[#2EC4B6]";
     if (timeRemaining > 30) return "text-[#FFB703]";
     return "text-[#E63946]";
@@ -31,9 +31,7 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <svg className="w-6 h-6 text-[#E85D04]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-          </svg>
+          <span className="text-xl">🎵</span>
           <span className="text-lg font-semibold text-[#F5F3F0]">SonicSavor</span>
         </div>
 
@@ -58,7 +56,7 @@ export default function Header({
             {onLogout && (
               <button
                 onClick={onLogout}
-                className="text-sm text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors duration-200 cursor-pointer"
+                className="text-sm text-[#A7A4B8] hover:text-[#F5F3F0] transition-colors"
               >
                 Logout
               </button>

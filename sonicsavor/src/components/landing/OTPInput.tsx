@@ -2,20 +2,20 @@
 
 import { useState, useRef, useEffect } from "react";
 
-interface AccessCodeEntryProps {
-  onSubmit: (code: string) => void;
+interface OTPInputProps {
+  onSubmit: (otp: string) => void;
   disabled?: boolean;
   isLoading?: boolean;
   error?: string | null;
 }
 
-export default function AccessCodeEntry({
+export default function OTPInput({
   onSubmit,
   disabled = false,
   isLoading = false,
   error = null,
-}: AccessCodeEntryProps) {
-  const [code, setCode] = useState(["", "", "", "", "", ""]);
+}: OTPInputProps) {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Auto-focus first input
@@ -29,9 +29,9 @@ export default function AccessCodeEntry({
     // Only allow digits
     if (value && !/^\d$/.test(value)) return;
 
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
 
     // Auto-advance to next input
     if (value && index < 5) {
@@ -39,13 +39,13 @@ export default function AccessCodeEntry({
     }
 
     // Auto-submit when all 6 digits entered
-    if (newCode.every((digit) => digit !== "")) {
-      onSubmit(newCode.join(""));
+    if (newOtp.every((digit) => digit !== "")) {
+      onSubmit(newOtp.join(""));
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -55,8 +55,8 @@ export default function AccessCodeEntry({
     const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
 
     if (pastedData) {
-      const newCode = pastedData.split("").concat(Array(6).fill("")).slice(0, 6);
-      setCode(newCode);
+      const newOtp = pastedData.split("").concat(Array(6).fill("")).slice(0, 6);
+      setOtp(newOtp);
 
       // Focus last filled input or last input
       const lastFilledIndex = Math.min(pastedData.length - 1, 5);
@@ -71,9 +71,9 @@ export default function AccessCodeEntry({
 
   return (
     <div className="space-y-6">
-      {/* Code inputs */}
+      {/* OTP inputs */}
       <div className="flex justify-center gap-2 sm:gap-3">
-        {code.map((digit, index) => (
+        {otp.map((digit, index) => (
           <input
             key={index}
             ref={(el) => { inputRefs.current[index] = el; }}
@@ -89,7 +89,7 @@ export default function AccessCodeEntry({
               w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold
               bg-[#1A1926] border-2 rounded-xl
               text-[#F5F3F0]
-              focus:outline-none focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20
+              focus:outline-none focus:border-[#9D4EDD] focus:ring-2 focus:ring-[#9D4EDD]/20
               transition-all
               disabled:opacity-50 disabled:cursor-not-allowed
               ${error ? "border-[#E63946]" : "border-[#242334]"}
@@ -114,7 +114,7 @@ export default function AccessCodeEntry({
 
       {/* Hint */}
       <p className="text-center text-sm text-[#A7A4B8]">
-        Enter the 6-digit code from our staff
+        Check your email for the 6-digit code
       </p>
     </div>
   );

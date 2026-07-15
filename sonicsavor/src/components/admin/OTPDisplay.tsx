@@ -6,7 +6,7 @@ interface OTPDisplayProps {
   code: string;
   guestName: string;
   tableInfo: string;
-  expiresIn: number;
+  expiresIn: number; // seconds
   onDismiss: () => void;
   onCopy: () => void;
 }
@@ -24,7 +24,11 @@ export default function OTPDisplay({
 
   useEffect(() => {
     if (timeLeft <= 0) return;
-    const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
     return () => clearInterval(timer);
   }, [timeLeft]);
 
@@ -42,15 +46,14 @@ export default function OTPDisplay({
   };
 
   return (
-    <div className="bg-[#1A1926] rounded-xl p-6 border border-[#2EC4B6] animate-[fadeIn_0.3s_ease-out]">
+    <div className="bg-[#1A1926] rounded-xl p-6 border border-[#2EC4B6] animate-in slide-in-from-bottom-4">
+      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
-        <svg className="w-6 h-6 text-[#2EC4B6]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-          <polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
+        <span className="text-2xl">✅</span>
         <h2 className="text-lg font-semibold text-[#F5F3F0]">OTP Generated!</h2>
       </div>
 
+      {/* Code Display */}
       <div className="bg-[#0F0E17] rounded-xl p-6 mb-4">
         <div className="text-center">
           <div className="text-4xl sm:text-5xl font-mono font-bold text-[#FFB703] tracking-widest">
@@ -59,6 +62,7 @@ export default function OTPDisplay({
         </div>
       </div>
 
+      {/* Info */}
       <div className="space-y-2 mb-4">
         <div className="flex justify-between text-sm">
           <span className="text-[#A7A4B8]">Guest:</span>
@@ -76,18 +80,19 @@ export default function OTPDisplay({
         </div>
       </div>
 
+      {/* Actions */}
       <div className="flex gap-3">
         <button
           onClick={handleCopy}
-          className="flex-1 py-3 bg-[#242334] hover:bg-[#2A2940] text-[#F5F3F0] font-medium rounded-xl transition-colors duration-200 cursor-pointer"
+          className="flex-1 py-3 bg-[#242334] hover:bg-[#2A2940] text-[#F5F3F0] font-medium rounded-xl transition-colors"
         >
-          {copied ? "Copied!" : "Copy Code"}
+          {copied ? "✓ Copied!" : "📋 Copy Code"}
         </button>
         <button
           onClick={onDismiss}
-          className="flex-1 py-3 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-medium rounded-xl transition-colors duration-200 cursor-pointer"
+          className="flex-1 py-3 bg-[#E85D04] hover:bg-[#E85D04]/90 text-[#F5F3F0] font-medium rounded-xl transition-colors"
         >
-          Dismiss
+          ✓ Dismiss
         </button>
       </div>
     </div>
